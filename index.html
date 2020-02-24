@@ -1,0 +1,62 @@
+<html>
+
+<head>
+    <title>INFO 3300 - Project 1</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+
+<body>
+    <div class="project1">
+        <h1>Project 1</h1>
+    <p>
+        <script>
+            let result = [];
+            d3.json("./most_popular_youtube_videos_usa_page1.json", d3.autoType)
+                .then((data1) => {
+
+                    result = result.concat(data1.items);
+
+                    d3.json("./most_popular_youtube_videos_usa_page2.json", d3.autoType)
+                        .then((data2) => {
+
+                            result = result.concat(data2.items);
+                            
+                            d3.json("./most_popular_youtube_videos_usa_page3.json", d3.autoType)
+                                .then((data3) => {
+
+                                    result = result.concat(data3.items);
+                                    
+                                    d3.json("./most_popular_youtube_videos_usa_page4.json", d3.autoType)
+                                        .then((data4) => {
+
+                                            result = result.concat(data4.items);
+                                            console.log("combined result", result);
+
+                                            // do stuff/explore
+                                            // In final version, will concat data into a single file rather than doing it here
+
+                                        }, (error) => {
+                                            console.log(error);
+                                            return;
+                                        });
+
+                                }, (error) => {
+                                    console.log(error);
+                                    return;
+                                });
+
+                        }, (error) => {
+                            console.log(error);
+                            return;
+                        });
+
+                }, (error) => {
+                    console.log(error);
+                });
+
+        </script>
+
+    </p>
+</body>
+
+</html>
