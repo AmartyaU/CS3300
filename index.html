@@ -3,12 +3,21 @@
 <head>
     <title>INFO 3300 - Project 1</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <style>
+        .gridlines line {
+            stroke: #bbb;
+        }
+    
+        .gridlines .domain {
+            stroke: none;
+        }
+    </style>
 </head>
 
 <body>
     <div class="project1">
         <h1>Project 1</h1>
-    <p>
+    <p id="part1">
         <script>
             let result = [];
             d3.json("./most_popular_youtube_videos_usa_page1.json", d3.autoType)
@@ -28,12 +37,79 @@
                                     
                                     d3.json("./most_popular_youtube_videos_usa_page4.json", d3.autoType)
                                         .then((data4) => {
+                                            const width = 800;
+                                            const height = 800;
+                                            const svg = d3.select("#part1").append("svg")
+                                                .attr("width", width)
+                                                .attr("height", height);
 
                                             result = result.concat(data4.items);
                                             console.log("combined result", result);
 
+                                            const xScale = d3.scaleBand()
+                                                .domain([1, 2, 10, 17, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29])
+                                                .range([40, width-20])
+                                                .padding(0.1);
+
+                                            const yScale = d3.scaleLinear()
+                                                .domain([0, 50])
+                                                .range([height-20, 20]);
+
                                             // do stuff/explore
                                             // In final version, will concat data into a single file rather than doing it here
+                                            const categories = {};
+                                            result.forEach(d => {
+                                                category = d.snippet.categoryId;
+                                                if(categories[category]) {
+                                                    categories[category] += 1;
+                                                } else {
+                                                    categories[category] = 1;
+                                                }
+                                            });
+                                            console.log(categories);
+
+                                            const categoryScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+                                            let leftAxis = d3.axisLeft(yScale);
+                                            svg.append("g")
+                                                .attr("class", "y axis")
+                                                .attr("transform", "translate(20, 0)")
+                                                .call(leftAxis);
+
+                                            let bottomAxis = d3.axisBottom(xScale)
+                                                .ticks(3)
+                                                .tickSize(0);
+                                            svg.append("g")
+                                                .attr("class", "x axis")
+                                                .attr("transform", "translate(-20, 780)")
+                                                .call(bottomAxis);
+
+                                            let leftGridlines = d3.axisLeft(yScale)
+                                                .tickSize(-width + 40)
+                                                .tickFormat("");
+                                            svg.append("g").attr("class", "y gridlines")
+                                                .attr("transform", "translate(20, 0)")
+                                                .call(leftGridlines);
+
+                                            // let bottomGridlines = d3.axisBottom(xScale)
+                                            //     .tickSize(-height + 40)
+                                            //     .tickFormat("")
+                                            // svg.append("g").attr("class", "x gridlines")
+                                            //     .attr("transform", "translate(0, 220)")
+                                            //     .call(bottomGridlines);
+
+                                            Object.keys(categories).forEach( (key, i) => {
+                                                console.log(key, categories[key]);
+
+                                                svg.append("line")
+                                                    .attr("x1", xScale(key))
+                                                    .attr("x2", xScale(key))
+                                                    .attr("y1", height-20)
+                                                    .attr("y2", yScale(categories[key]))
+                                                    .style("stroke", categoryScale(key))
+                                                    .style("stroke-width", 35);
+                                            });
+                                            console.log(categoryScale.domain());
 
                                         }, (error) => {
                                             console.log(error);
