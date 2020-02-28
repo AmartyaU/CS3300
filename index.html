@@ -222,16 +222,12 @@
                                                 // const tagScale2 = d3.scaleSequential()
                                                 //     .domain([-20, 150])
                                                 //     .interpolator(d3.interpolateGreens);
-                                                const wordCloud_margin = { top: 10, right: 10, bottom: 10, left: 10 };
-                                                const wordCloud_width = 700 - wordCloud_margin.left - wordCloud_margin.right;
-                                                const wordCloud_height = 400 - wordCloud_margin.top - wordCloud_margin.bottom;
+                                                const wordCloud_width = 700;
+                                                const wordCloud_height = 400;
 
                                                 let wordCloud_svg = d3.select("#word_cloud").append("svg")
                                                     .attr("width", wordCloud_width)
                                                     .attr("height", wordCloud_height);
-
-                                                let wordArea = wordCloud_svg.append("g")
-                                                    .attr("transform", "translate(" + wordCloud_margin.left + "," + wordCloud_margin.top + ")");
 
                                                 /** Construct a cloud layout instance **/
                                                 var layout = d3.layout.cloud()
@@ -246,7 +242,7 @@
                                                 /** Take the output of layout and draw the words (fill depends on the word, font-size 
                                                  *  depends on the frequency **/
                                                 function draw(words) {
-                                                    wordArea.append("g")
+                                                    wordCloud_svg.append("g")
                                                         .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
                                                         .selectAll("text")
                                                         .data(words)
