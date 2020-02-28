@@ -54,13 +54,13 @@
             border-radius: 20px;
         }
 
-        .svg {
+        /* .svg {
             margin-left: 15%;
-        }
+        } */
 
-        #word_cloud {
+        /* Center the SVG */
+        .svg_container {
             text-align: center;
-            margin-left: 0%;
         }
     </style>
 </head>
@@ -80,6 +80,7 @@
             visualizations.
         </div>
         <p id="part1">
+            <div id="bar_chart" class="svg_container"></div>
             <div class="para">In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to
                 demonstrate the visual form of a
                 document or a typeface without relying on meaningful content. Lorem ipsum may be used before final copy
@@ -109,7 +110,7 @@
 
                                                 const width = 800;
                                                 const height = 800;
-                                                const svg = d3.select("#part1").append("svg")
+                                                const svg = d3.select("#bar_chart").append("svg")
                                                     .attr("class", "svg")
                                                     .attr("width", width)
                                                     .attr("height", height);
@@ -285,7 +286,7 @@
 
         </p>
         <p id="part4">
-            <div id="word_cloud"></div>
+            <div id="word_cloud" class="svg_container"></div>
             <div class="para">The word cloud displays the 20 most frequently used tags by the trending videos on
                 YouTube. The average number of tags used by each trending video is 18.81. </div>
         </p>
