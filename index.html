@@ -153,8 +153,7 @@
                                             });
                                             console.log(categories);
 
-                                            // const categoryScale = d3.scaleOrdinal(d3.schemeCategory10);
-                                            const categoryScale = d3.scaleOrdinal(["#e60702", "#e87c00", "#ffe500", "#00b51b", "#00adb3", "#1e33ba", "#8c2fd4", "#ff6eb6", "#ff6b6b"])
+                                            const categoryScale = d3.scaleOrdinal(d3.schemeCategory10);
 
                                             let leftAxis = d3.axisLeft(yScale);
                                             svg.append("g")
