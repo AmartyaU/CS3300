@@ -92,7 +92,16 @@
                 form without the meaning of the text influencing the design.</div>
         </p>
         <p id="part3">
-            <div id="comparison_img" class="svg_container"></div>
+            <div class="svg_container">
+                <svg id="comparison_img" width="1000" height="400">
+                    <!-- I used this link to get a Gaussian Blur https://www.w3schools.com/graphics/svg_fegaussianblur.asp -->
+                    <defs>
+                        <filter id="f1" x="0" y="0">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" />
+                        </filter>
+                    </defs>
+                </svg>
+            </div>
             <div class="para">Standard vs High Definition. </div>
         </p>
         <p id="part4">
@@ -192,7 +201,90 @@
                                             // Add more code below
 
 
-                                            // Part 4
+                                            // Part 3 - Standard vs High Definition
+                                            let def_svg = d3.selectAll("#comparison_img");
+
+                                            const def_svg_height = def_svg.attr("height");
+                                            const def_svg_width = def_svg.attr("width");
+                                            const img_width = 483;
+                                            const img_height = 272.5;
+                                            const translate_down = (def_svg_height - img_height) / 2;
+
+                                            let img_area = def_svg.append("g")
+                                                .attr("transform", "translate(" + def_svg_width / 2 + ", 0)")
+                                                .attr("width", img_width)
+                                                .attr("height", img_height);
+
+                                            /** Used this link https://fabiofranchino.com/blog/how-to-load-image-in-svg-with-d3js/ 
+                                             *  to learn how to append images using d3 **/
+                                            img_area.append("image")
+                                                .attr("xlink:href", "vid_img_left.jpg")
+                                                .attr("transform", "translate(0, " + translate_down + ")")
+                                                .attr('width', img_width / 2)
+                                                .attr('height', img_height);
+                                            img_area.append("image")
+                                                .attr("xlink:href", "vid_img_right.jpg")
+                                                .attr("transform", "translate(" + img_width / 2 + "," + translate_down + ")")
+                                                .attr('width', img_width / 2)
+                                                .attr('height', img_height)
+                                                .style("filter", "url(#f1)");
+
+                                            img_area.append("rect")
+                                                .attr("x", img_width / 2)
+                                                .attr("y", img_height);
+
+                                            // img_area.append("text")
+                                            //     .attr("transform", "translate(" + img_width / 4 + ", " + (translate_down + img_height / 2) + ")")
+                                            //     .style("text-anchor", "middle")
+                                            //     .style("fill", "#ffee8f")
+                                            //     .style("font-size", 50)
+                                            //     .style("font-family", "Impact")
+                                            //     .style("stroke-width", 1)
+                                            //     .style("stroke", "black")
+                                            //     .text("HD: 193")
+
+                                            // img_area.append("text")
+                                            //     .attr("transform", "translate(" + 3 * img_width / 4 + ", " + (translate_down + img_height / 2) + ")")
+                                            //     .style("text-anchor", "middle")
+                                            //     .style("fill", "#ffee8f")
+                                            //     .style("font-size", 50)
+                                            //     .style("font-family", "Impact")
+                                            //     .style("stroke-width", 1)
+                                            //     .style("stroke", "black")
+                                            //     .text("SD: 7")
+
+                                            // img_area.append("rect")
+                                            //     .attr("transform", "translate(0," + translate_down + ")")
+                                            //     .attr("x", 0)
+                                            //     .attr("y", 0)
+                                            //     .attr("width", 8.5)
+                                            //     .attr("height", 273)
+                                            //     .style("fill", "white");
+
+                                            // img_area.append("rect")
+                                            //     .attr("transform", "translate(0, " + translate_down + ")")
+                                            //     .attr("x", 250)
+                                            //     .attr("y", 0)
+                                            //     .attr("width", 235)
+                                            //     .attr("height", 275)
+                                            //     .style("fill", "white");
+
+                                            let num_hd = 0;
+                                            let num_sd = 0;
+                                            result.forEach(d => {
+                                                let vid_def = d.contentDetails.definition;
+                                                console.log(vid_def);
+                                                if (vid_def == "hd") {
+                                                    num_hd += 1;
+                                                }
+                                                else {
+                                                    num_sd += 1;
+                                                }
+                                            })
+                                            console.log(num_hd);
+                                            console.log(num_sd);
+
+                                            // Part 4 - Top Tags 
                                             // Getting top 20 tags 
                                             let tagCount = 0;
                                             let tags = {};
@@ -219,11 +311,7 @@
                                             }, tags);
                                             props.sort(function (p1, p2) { return p2.value - p1.value; });
                                             var topTags = props.slice(0, 20);
-                                            // var topTags = props.slice(0, 20).reduce(function (obj, prop) {
-                                            //     obj[prop.key] = prop.value;
-                                            //     return obj;
-                                            // }, {});
-                                            console.log(topTags);
+                                            // console.log(topTags);
 
                                             // Word Cloud code 
                                             // const tagScale = d3.scaleOrdinal(d3.schemePaired);
