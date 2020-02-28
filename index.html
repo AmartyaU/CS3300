@@ -4,11 +4,13 @@
     <title>INFO 3300 - Project 1</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Serif&display=swap" rel="stylesheet">
     <style>
         body,
         html {
             margin: 0;
             padding: 0;
+            font-family: 'Noto Serif';
         }
 
         .gridlines line {
@@ -49,7 +51,7 @@
             margin-top: 2%;
             margin-bottom: 2%;
             padding: 1.5%;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: white;
             border-radius: 20px;
         }
@@ -88,204 +90,208 @@
                 but it may also be used to temporarily replace copy in a process called greeking, which allows designers
                 to consider
                 form without the meaning of the text influencing the design.</div>
-            <script>
-                let result = [];
-                d3.json("./most_popular_youtube_videos_usa_page1.json", d3.autoType)
-                    .then((data1) => {
-
-                        result = result.concat(data1.items);
-
-                        d3.json("./most_popular_youtube_videos_usa_page2.json", d3.autoType)
-                            .then((data2) => {
-
-                                result = result.concat(data2.items);
-
-                                d3.json("./most_popular_youtube_videos_usa_page3.json", d3.autoType)
-                                    .then((data3) => {
-
-                                        result = result.concat(data3.items);
-
-                                        d3.json("./most_popular_youtube_videos_usa_page4.json", d3.autoType)
-                                            .then((data4) => {
-
-                                                const width = 800;
-                                                const height = 800;
-                                                const svg = d3.select("#bar_chart").append("svg")
-                                                    .attr("class", "svg")
-                                                    .attr("width", width)
-                                                    .attr("height", height);
-
-                                                result = result.concat(data4.items);
-                                                console.log("combined result", result);
-
-                                                const xScale = d3.scaleBand()
-                                                    .domain([1, 2, 10, 17, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29])
-                                                    .range([40, width - 20])
-                                                    .padding(0.1);
-
-                                                const yScale = d3.scaleLinear()
-                                                    .domain([0, 50])
-                                                    .range([height - 20, 20]);
-
-                                                // do stuff/explore
-                                                // In final version, will concat data into a single file rather than doing it here
-
-                                                const categories = {};
-                                                result.forEach(d => {
-                                                    category = d.snippet.categoryId;
-                                                    if (categories[category]) {
-                                                        categories[category] += 1;
-                                                    } else {
-                                                        categories[category] = 1;
-                                                    }
-                                                });
-                                                console.log(categories);
-
-                                                const categoryScale = d3.scaleOrdinal(d3.schemeCategory10);
-
-                                                let leftAxis = d3.axisLeft(yScale);
-                                                svg.append("g")
-                                                    .attr("class", "y axis")
-                                                    .attr("transform", "translate(20, 0)")
-                                                    .call(leftAxis);
-
-                                                let bottomAxis = d3.axisBottom(xScale)
-                                                    .ticks(3)
-                                                    .tickSize(0);
-                                                svg.append("g")
-                                                    .attr("class", "x axis")
-                                                    .attr("transform", "translate(-20, 780)")
-                                                    .call(bottomAxis);
-
-                                                let leftGridlines = d3.axisLeft(yScale)
-                                                    .tickSize(-width + 40)
-                                                    .tickFormat("");
-                                                svg.append("g").attr("class", "y gridlines")
-                                                    .attr("transform", "translate(20, 0)")
-                                                    .call(leftGridlines);
-
-                                                Object.keys(categories).forEach((key, i) => {
-                                                    console.log(key, categories[key]);
-
-                                                    svg.append("line")
-                                                        .attr("x1", xScale(key))
-                                                        .attr("x2", xScale(key))
-                                                        .attr("y1", height - 20)
-                                                        .attr("y2", yScale(categories[key]))
-                                                        .style("stroke", categoryScale(key))
-                                                        .style("stroke-width", 35);
-                                                });
-                                                console.log(categoryScale.domain());
-
-                                                // Add more code below
-
-
-                                                // Part 4
-                                                // Getting top 20 tags 
-                                                let tagCount = 0;
-                                                let tags = {};
-                                                result.forEach(d => {
-                                                    let tagList = d.snippet.tags;
-                                                    if (tagList) {
-                                                        tagCount += tagList.length;
-                                                        tagList.forEach(item => {
-                                                            if (tags[item]) {
-                                                                tags[item] += 1;
-                                                            }
-                                                            else {
-                                                                tags[item] = 1;
-                                                            }
-                                                        })
-                                                    }
-                                                })
-                                                console.log(tagCount / 200);
-
-                                                /** Code for retrieving the top 20 tags was written with the guidance of this website
-                                                https://stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys **/
-                                                var props = Object.keys(tags).map(function (key) {
-                                                    return { key: key, value: this[key] };
-                                                }, tags);
-                                                props.sort(function (p1, p2) { return p2.value - p1.value; });
-                                                var topTags = props.slice(0, 20);
-                                                // var topTags = props.slice(0, 20).reduce(function (obj, prop) {
-                                                //     obj[prop.key] = prop.value;
-                                                //     return obj;
-                                                // }, {});
-                                                console.log(topTags);
-
-                                                // Word Cloud code 
-                                                const tagScale = d3.scaleOrdinal(d3.schemePaired);
-                                                // const tagScale = d3.scaleOrdinal(d3.schemePaired);
-                                                // const tagScale = d3.scaleOrdinal(["#f53325", "#666262", "#ffffff", "#000000"]);
-
-                                                /** https://bl.ocks.org/TaraZhu/120d48c43be68e92da304cb08235d052 **/
-                                                // const tagScale2 = d3.scaleSequential()
-                                                //     .domain([-20, 150])
-                                                //     .interpolator(d3.interpolateGreens);
-                                                const wordCloud_width = 700;
-                                                const wordCloud_height = 400;
-
-                                                let wordCloud_svg = d3.select("#word_cloud").append("svg")
-                                                    .attr("width", wordCloud_width)
-                                                    .attr("height", wordCloud_height);
-
-                                                /** Construct a cloud layout instance **/
-                                                var layout = d3.layout.cloud()
-                                                    .size([wordCloud_width, wordCloud_height])
-                                                    .words(topTags.map(function (d) { return { text: d.key, size: 6 * d.value }; }))
-                                                    .padding(5)                                     //space between words
-                                                    .rotate(0)
-                                                    .fontSize(function (d) { return d.size; })      // font size of words
-                                                    .on("end", draw);
-                                                layout.start();
-
-                                                /** Take the output of layout and draw the words (fill depends on the word, font-size 
-                                                 *  depends on the frequency **/
-                                                function draw(words) {
-                                                    wordCloud_svg.append("g")
-                                                        .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
-                                                        .selectAll("text")
-                                                        .data(words)
-                                                        .enter().append("text")
-                                                        .style("font-size", function (d) { return d.size; })
-                                                        .style("fill", function (d) { return tagScale(d.text) })
-                                                        .style("stroke", "lightgrey")
-                                                        .style("stroke-width", 1)
-                                                        .attr("text-anchor", "middle")
-                                                        .style("font-family", "Impact")
-                                                        .attr("transform", function (d) {
-                                                            return "translate(" + [d.x, d.y] + ")";
-                                                        })
-                                                        .text(function (d) { return d.text; });
-                                                }
-
-                                            }, (error) => {
-                                                console.log(error);
-                                                return;
-                                            });
-
-                                    }, (error) => {
-                                        console.log(error);
-                                        return;
-                                    });
-
-                            }, (error) => {
-                                console.log(error);
-                                return;
-                            });
-
-                    }, (error) => {
-                        console.log(error);
-                    });
-
-            </script>
-
+        </p>
+        <p id="part3">
+            <div id="comparison_img" class="svg_container"></div>
+            <div class="para">Standard vs High Definition. </div>
         </p>
         <p id="part4">
             <div id="word_cloud" class="svg_container"></div>
             <div class="para">The word cloud displays the 20 most frequently used tags by the trending videos on
                 YouTube. The average number of tags used by each trending video is 18.81. </div>
         </p>
+        <script>
+            let result = [];
+            d3.json("./most_popular_youtube_videos_usa_page1.json", d3.autoType)
+                .then((data1) => {
+
+                    result = result.concat(data1.items);
+
+                    d3.json("./most_popular_youtube_videos_usa_page2.json", d3.autoType)
+                        .then((data2) => {
+
+                            result = result.concat(data2.items);
+
+                            d3.json("./most_popular_youtube_videos_usa_page3.json", d3.autoType)
+                                .then((data3) => {
+
+                                    result = result.concat(data3.items);
+
+                                    d3.json("./most_popular_youtube_videos_usa_page4.json", d3.autoType)
+                                        .then((data4) => {
+
+                                            const width = 800;
+                                            const height = 800;
+                                            const svg = d3.select("#bar_chart").append("svg")
+                                                .attr("class", "svg")
+                                                .attr("width", width)
+                                                .attr("height", height);
+
+                                            result = result.concat(data4.items);
+                                            console.log("combined result", result);
+
+                                            const xScale = d3.scaleBand()
+                                                .domain([1, 2, 10, 17, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29])
+                                                .range([40, width - 20])
+                                                .padding(0.1);
+
+                                            const yScale = d3.scaleLinear()
+                                                .domain([0, 50])
+                                                .range([height - 20, 20]);
+
+                                            // do stuff/explore
+                                            // In final version, will concat data into a single file rather than doing it here
+
+                                            const categories = {};
+                                            result.forEach(d => {
+                                                category = d.snippet.categoryId;
+                                                if (categories[category]) {
+                                                    categories[category] += 1;
+                                                } else {
+                                                    categories[category] = 1;
+                                                }
+                                            });
+                                            console.log(categories);
+
+                                            // const categoryScale = d3.scaleOrdinal(d3.schemeCategory10);
+                                            const categoryScale = d3.scaleOrdinal(["#e60702", "#e87c00", "#ffe500", "#00b51b", "#00adb3", "#1e33ba", "#8c2fd4", "#ff6eb6", "#ff6b6b"])
+
+                                            let leftAxis = d3.axisLeft(yScale);
+                                            svg.append("g")
+                                                .attr("class", "y axis")
+                                                .attr("transform", "translate(20, 0)")
+                                                .call(leftAxis);
+
+                                            let bottomAxis = d3.axisBottom(xScale)
+                                                .ticks(3)
+                                                .tickSize(0);
+                                            svg.append("g")
+                                                .attr("class", "x axis")
+                                                .attr("transform", "translate(-20, 780)")
+                                                .call(bottomAxis);
+
+                                            let leftGridlines = d3.axisLeft(yScale)
+                                                .tickSize(-width + 40)
+                                                .tickFormat("");
+                                            svg.append("g").attr("class", "y gridlines")
+                                                .attr("transform", "translate(20, 0)")
+                                                .call(leftGridlines);
+
+                                            Object.keys(categories).forEach((key, i) => {
+                                                console.log(key, categories[key]);
+
+                                                svg.append("line")
+                                                    .attr("x1", xScale(key))
+                                                    .attr("x2", xScale(key))
+                                                    .attr("y1", height - 20)
+                                                    .attr("y2", yScale(categories[key]))
+                                                    .style("stroke", categoryScale(key))
+                                                    .style("stroke-width", 35);
+                                            });
+                                            console.log(categoryScale.domain());
+
+                                            // Add more code below
+
+
+                                            // Part 4
+                                            // Getting top 20 tags 
+                                            let tagCount = 0;
+                                            let tags = {};
+                                            result.forEach(d => {
+                                                let tagList = d.snippet.tags;
+                                                if (tagList) {
+                                                    tagCount += tagList.length;
+                                                    tagList.forEach(item => {
+                                                        if (tags[item]) {
+                                                            tags[item] += 1;
+                                                        }
+                                                        else {
+                                                            tags[item] = 1;
+                                                        }
+                                                    })
+                                                }
+                                            })
+                                            console.log(tagCount / 200);
+
+                                            /** Code for retrieving the top 20 tags was written with the guidance of this website
+                                            https://stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys **/
+                                            var props = Object.keys(tags).map(function (key) {
+                                                return { key: key, value: this[key] };
+                                            }, tags);
+                                            props.sort(function (p1, p2) { return p2.value - p1.value; });
+                                            var topTags = props.slice(0, 20);
+                                            // var topTags = props.slice(0, 20).reduce(function (obj, prop) {
+                                            //     obj[prop.key] = prop.value;
+                                            //     return obj;
+                                            // }, {});
+                                            console.log(topTags);
+
+                                            // Word Cloud code 
+                                            // const tagScale = d3.scaleOrdinal(d3.schemePaired);
+                                            // const tagScale = d3.scaleOrdinal(["#f53325", "#666262", "#ffffff", "#000000"]);
+                                            const tagScale = d3.scaleOrdinal(["#e60702", "#ff8b17", "#00b51b", "#ffe500", "#00adb3", "#1e33ba", "#8c2fd4", "#ff6eb6", "#ff6b6b", "#92eb6a"])
+                                            /** https://bl.ocks.org/TaraZhu/120d48c43be68e92da304cb08235d052 **/
+                                            // const tagScale2 = d3.scaleSequential()
+                                            //     .domain([-20, 150])
+                                            //     .interpolator(d3.interpolateGreens);
+                                            const wordCloud_width = 700;
+                                            const wordCloud_height = 400;
+
+                                            let wordCloud_svg = d3.select("#word_cloud").append("svg")
+                                                .attr("width", wordCloud_width)
+                                                .attr("height", wordCloud_height);
+
+                                            /** Construct a cloud layout instance **/
+                                            var layout = d3.layout.cloud()
+                                                .size([wordCloud_width, wordCloud_height])
+                                                .words(topTags.map(function (d) { return { text: d.key, size: 6 * d.value }; }))
+                                                .padding(5)                                     //space between words
+                                                .rotate(0)
+                                                .fontSize(function (d) { return d.size; })      // font size of words
+                                                .random(function (d) { return 0.45; })           // taken from https://stackoverflow.com/questions/42941368/keep-d3-cloud-consistent-between-refreshes-with-a-seed-value to prevent it from changing when refreshed
+                                                .on("end", draw);
+                                            layout.start();
+
+                                            /** Take the output of layout and draw the words (fill depends on the word, font-size 
+                                             *  depends on the frequency **/
+                                            function draw(words) {
+                                                wordCloud_svg.append("g")
+                                                    .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+                                                    .selectAll("text")
+                                                    .data(words)
+                                                    .enter().append("text")
+                                                    .style("font-size", function (d) { return d.size; })
+                                                    .style("fill", function (d) { return tagScale(d.text) })
+                                                    // .style("stroke", "lightgrey")
+                                                    // .style("stroke-width", 1)
+                                                    .attr("text-anchor", "middle")
+                                                    .style("font-family", "Impact")
+                                                    .attr("transform", function (d) {
+                                                        return "translate(" + [d.x, d.y] + ")";
+                                                    })
+                                                    .text(function (d) { return d.text; });
+                                            }
+
+                                        }, (error) => {
+                                            console.log(error);
+                                            return;
+                                        });
+
+                                }, (error) => {
+                                    console.log(error);
+                                    return;
+                                });
+
+                        }, (error) => {
+                            console.log(error);
+                            return;
+                        });
+
+                }, (error) => {
+                    console.log(error);
+                });
+
+        </script>
 </body>
 
 </html>
