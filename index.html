@@ -4,6 +4,11 @@
     <title>INFO 3300 - Project 1</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+
         .gridlines line {
             stroke: #bbb;
         }
@@ -11,13 +16,61 @@
         .gridlines .domain {
             stroke: none;
         }
+
+        .header {
+            background-color:rgb(255, 0, 0, 0.8);
+            /* #FF0000; */
+            height: 5rem;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            color: white;
+            text-align: center;
+            padding-top: 1rem;
+        }
+
+        .sub_title {
+            font-size: 2rem;
+            text-align: center;
+            color: #282828;
+        }
+
+        .logo {
+            width: 9rem;
+        }
+
+        .para {
+            background-color:rgb(255, 0, 0, 0.8);
+            margin-left: 9%;
+            margin-right: 9%;
+            margin-top: 2%;
+            margin-bottom: 2%;
+            padding: 1.5%;
+            font-size: 1.5rem;
+            color: white;
+            border-radius: 20px;
+        }
+
+        .svg {
+            margin-left: 15%;
+        }
     </style>
 </head>
 
 <body>
     <div class="project1">
-        <h1>Project 1</h1>
+        <div class="header">
+            <h1 class="title">Project 1</h1>
+        </div>
+        <div class="sub_header">
+            <h2 class="sub_title">What makes a video trending on <img class="logo" src="./YouTube_Logo.svg" />?</h2>
+        </div>
     <p id="part1">
+        <div class="para">In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a
+        document or a typeface without relying on meaningful content. Lorem ipsum may be used before final copy is available,
+        but it may also be used to temporarily replace copy in a process called greeking, which allows designers to consider
+        form without the meaning of the text influencing the design.</div>
         <script>
             let result = [];
             d3.json("./most_popular_youtube_videos_usa_page1.json", d3.autoType)
@@ -37,9 +90,11 @@
                                     
                                     d3.json("./most_popular_youtube_videos_usa_page4.json", d3.autoType)
                                         .then((data4) => {
+    
                                             const width = 800;
                                             const height = 800;
                                             const svg = d3.select("#part1").append("svg")
+                                                .attr("class", "svg")
                                                 .attr("width", width)
                                                 .attr("height", height);
 
@@ -57,6 +112,7 @@
 
                                             // do stuff/explore
                                             // In final version, will concat data into a single file rather than doing it here
+
                                             const categories = {};
                                             result.forEach(d => {
                                                 category = d.snippet.categoryId;
@@ -91,13 +147,6 @@
                                                 .attr("transform", "translate(20, 0)")
                                                 .call(leftGridlines);
 
-                                            // let bottomGridlines = d3.axisBottom(xScale)
-                                            //     .tickSize(-height + 40)
-                                            //     .tickFormat("")
-                                            // svg.append("g").attr("class", "x gridlines")
-                                            //     .attr("transform", "translate(0, 220)")
-                                            //     .call(bottomGridlines);
-
                                             Object.keys(categories).forEach( (key, i) => {
                                                 console.log(key, categories[key]);
 
@@ -110,6 +159,8 @@
                                                     .style("stroke-width", 35);
                                             });
                                             console.log(categoryScale.domain());
+
+                                            // Add more code below
 
                                         }, (error) => {
                                             console.log(error);
