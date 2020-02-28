@@ -1,4 +1,4 @@
-Queried from Youtube's API on Sunday Feb 23, 9:35PM (Each page consists of 50 results for a total of 200 results)
+Queried from Youtube's API on Sunday Feb 23, 9:35PM (Each page consists of 50 results for a total of 200 results). Youtube only has 200 videos on the trending page from the last 7 days (most recent vidoes) so that will be our dataset. We will be analyzing the trending videos from the United States region for relevance.
 
 # cURL Request Made for Page 1
 curl\
@@ -30,3 +30,10 @@ curl \
 \
 --header 'Accept: application/json' \
 --compressed
+
+# cURL Request Made for the categories page
+curl \
+  'https://www.googleapis.com/youtube/v3/videoCategories?part=snippet&regionCode=US&key=[YOUR_API_KEY]' \
+  --header 'Authorization: Bearer [YOUR_ACCESS_TOKEN]' \
+  --header 'Accept: application/json' \
+  --compressed
