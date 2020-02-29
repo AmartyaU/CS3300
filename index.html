@@ -97,17 +97,21 @@
                     <!-- I used this link to get a Gaussian Blur https://www.w3schools.com/graphics/svg_fegaussianblur.asp -->
                     <defs>
                         <filter id="f1" x="0" y="0">
-                            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" />
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
                         </filter>
                     </defs>
                 </svg>
             </div>
-            <div class="para">Standard vs High Definition. </div>
+            <div class="para">Standard vs High Definition. Very few standard definition videos (7 out of 200) </div>
         </p>
         <p id="part4">
             <div id="word_cloud" class="svg_container"></div>
             <div class="para">The word cloud displays the 20 most frequently used tags by the trending videos on
-                YouTube. The average number of tags used by each trending video is 18.81. </div>
+                YouTube. The average number of tags used by each trending video is 18.81. Make note there's a lot of
+                entertainment terms - funny and comedy, also describes a lot of the subjects - how to, challenges, diy,
+                unboxing, vlog, reaction vids, sports, news, and music. Interesting to note how Deontay Wilder and Tyson
+                Fury are on there - this most likely is specific to the day the data was retrieved, not a general trend
+                of the most popular vids on Youtube </div>
         </p>
         <script>
             let result = [];
@@ -202,6 +206,19 @@
 
 
                                             // Part 3 - Standard vs High Definition
+                                            let num_hd = 0;
+                                            let num_sd = 0;
+                                            result.forEach(d => {
+                                                let vid_def = d.contentDetails.definition;
+                                                console.log(vid_def);
+                                                if (vid_def == "hd") {
+                                                    num_hd += 1;
+                                                }
+                                                else {
+                                                    num_sd += 1;
+                                                }
+                                            })
+
                                             let def_svg = d3.selectAll("#comparison_img");
 
                                             const def_svg_height = def_svg.attr("height");
@@ -218,20 +235,31 @@
                                             /** Used this link https://fabiofranchino.com/blog/how-to-load-image-in-svg-with-d3js/ 
                                              *  to learn how to append images using d3 **/
                                             img_area.append("image")
-                                                .attr("xlink:href", "vid_img_left.jpg")
+                                                .attr("xlink:href", "vid_img.png")
                                                 .attr("transform", "translate(0, " + translate_down + ")")
-                                                .attr('width', img_width / 2)
+                                                .attr('width', img_width)
                                                 .attr('height', img_height);
-                                            img_area.append("image")
-                                                .attr("xlink:href", "vid_img_right.jpg")
-                                                .attr("transform", "translate(" + img_width / 2 + "," + translate_down + ")")
-                                                .attr('width', img_width / 2)
-                                                .attr('height', img_height)
-                                                .style("filter", "url(#f1)");
-
                                             img_area.append("rect")
-                                                .attr("x", img_width / 2)
-                                                .attr("y", img_height);
+                                                .attr("transform", "translate(0, " + translate_down + ")")
+                                                .attr("x", 24 * img_width / 25)
+                                                .attr("y", 0)
+                                                .attr("width", img_width / 25)
+                                                .attr("height", img_height)
+                                                .style("fill", "white")
+                                                .style("opacity", 0.8);
+
+                                            // img_area.append("image")
+                                            //     .attr("xlink:href", "vid_img_left.jpg")
+                                            //     .attr("transform", "translate(0, " + translate_down + ")")
+                                            //     .attr('width', img_width / 2)
+                                            //     .attr('height', img_height);
+                                            // img_area.append("image")
+                                            //     .attr("xlink:href", "vid_img_right.jpg")
+                                            //     .attr("transform", "translate(" + img_width / 2 + "," + translate_down + ")")
+                                            //     .attr('width', img_width / 2)
+                                            //     .attr('height', img_height)
+                                            //     .style("filter", "url(#f1)");
+
 
                                             // img_area.append("text")
                                             //     .attr("transform", "translate(" + img_width / 4 + ", " + (translate_down + img_height / 2) + ")")
@@ -257,32 +285,17 @@
                                             //     .attr("transform", "translate(0," + translate_down + ")")
                                             //     .attr("x", 0)
                                             //     .attr("y", 0)
-                                            //     .attr("width", 8.5)
-                                            //     .attr("height", 273)
+                                            //     .attr("width", img_width / 2)
+                                            //     .attr("height", 10)
                                             //     .style("fill", "white");
 
                                             // img_area.append("rect")
                                             //     .attr("transform", "translate(0, " + translate_down + ")")
-                                            //     .attr("x", 250)
+                                            //     .attr("x", img_width / 2)
                                             //     .attr("y", 0)
-                                            //     .attr("width", 235)
-                                            //     .attr("height", 275)
+                                            //     .attr("width", img_width / 2)
+                                            //     .attr("height", 263)
                                             //     .style("fill", "white");
-
-                                            let num_hd = 0;
-                                            let num_sd = 0;
-                                            result.forEach(d => {
-                                                let vid_def = d.contentDetails.definition;
-                                                console.log(vid_def);
-                                                if (vid_def == "hd") {
-                                                    num_hd += 1;
-                                                }
-                                                else {
-                                                    num_sd += 1;
-                                                }
-                                            })
-                                            console.log(num_hd);
-                                            console.log(num_sd);
 
                                             // Part 4 - Top Tags 
                                             // Getting top 20 tags 
@@ -315,8 +328,9 @@
 
                                             // Word Cloud code 
                                             // const tagScale = d3.scaleOrdinal(d3.schemePaired);
-                                            // const tagScale = d3.scaleOrdinal(["#f53325", "#666262", "#ffffff", "#000000"]);
-                                            const tagScale = d3.scaleOrdinal(["#e60702", "#ff8b17", "#00b51b", "#ffe500", "#00adb3", "#1e33ba", "#8c2fd4", "#ff6eb6", "#ff6b6b", "#92eb6a"])
+                                            // const tagScale = d3.scaleOrdinal(["#f53325", "#737373", "#000000"]);
+                                            // const tagScale = d3.scaleOrdinal(["#e60702", "#ff8b17", "#00b51b", "#ffe500", "#00adb3", "#1e33ba", "#8c2fd4", "#ff6eb6", "#ff6b6b", "#92eb6a"])
+                                            const tagScale = d3.scaleOrdinal(["#ff2e2e", "#cab2d6", "#fb9b99", "#00c40a", "#00adc4", "#834bbf", "#d41c98", "#ffb0e5", "#ffab2e", "#ffd712", "#82d1ff"])
                                             /** https://bl.ocks.org/TaraZhu/120d48c43be68e92da304cb08235d052 **/
                                             // const tagScale2 = d3.scaleSequential()
                                             //     .domain([-20, 150])
@@ -332,10 +346,10 @@
                                             var layout = d3.layout.cloud()
                                                 .size([wordCloud_width, wordCloud_height])
                                                 .words(topTags.map(function (d) { return { text: d.key, size: 6 * d.value }; }))
-                                                .padding(5)                                     //space between words
+                                                .padding(5)                                         //space between words
                                                 .rotate(0)
-                                                .fontSize(function (d) { return d.size; })      // font size of words
-                                                .random(function (d) { return 0.45; })           // taken from https://stackoverflow.com/questions/42941368/keep-d3-cloud-consistent-between-refreshes-with-a-seed-value to prevent it from changing when refreshed
+                                                .fontSize(function (d) { return d.size; })          // font size of words
+                                                .random(function (d) { return 0.4; })              // taken from https://stackoverflow.com/questions/42941368/keep-d3-cloud-consistent-between-refreshes-with-a-seed-value to prevent it from changing when refreshed
                                                 .on("end", draw);
                                             layout.start();
 
@@ -349,8 +363,6 @@
                                                     .enter().append("text")
                                                     .style("font-size", function (d) { return d.size; })
                                                     .style("fill", function (d) { return tagScale(d.text) })
-                                                    // .style("stroke", "lightgrey")
-                                                    // .style("stroke-width", 1)
                                                     .attr("text-anchor", "middle")
                                                     .style("font-family", "Impact")
                                                     .attr("transform", function (d) {
