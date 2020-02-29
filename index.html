@@ -104,7 +104,7 @@
         </p>
         <p id="part3">
             <div class="svg_container">
-                <svg id="comparison_img" width="1000" height="400">
+                <svg id="comparison_img" width="1400" height="400">
                     <!-- I used this link to get a Gaussian Blur https://www.w3schools.com/graphics/svg_fegaussianblur.asp -->
                     <defs>
                         <filter id="f1" x="0" y="0">
@@ -246,7 +246,7 @@
 
                                             var kids_color = d3.scaleOrdinal()
                                                 .domain(data)
-                                                .range(["#282828","#FF0000"]);
+                                                .range(["#FF0000","#282828"]);
                                             var kids_pie = d3.pie()
                                                 .value(d => {return d.value;});
                                             
@@ -266,19 +266,19 @@
                                             
                                             
                                             svg2.append("circle")
-                                                .attr("cx",width2/2 + 300)
+                                                .attr("cx",width2/2 - 340)
                                                 .attr("cy",height2 - 220)
                                                 .attr("r", 6)
-                                                .style("fill", "#282828")
+                                                .style("fill", "#FF0000")
 
                                             svg2.append("circle")
-                                                .attr("cx",width2/2 + 300)
+                                                .attr("cx",width2/2 - 340)
                                                 .attr("cy",height2 - 180)
                                                 .attr("r", 6)
-                                                .style("fill", "#FF0000");
+                                                .style("fill", "#282828");
 
                                             svg2.append("text")
-                                                .attr("x",width2/2 + 320)
+                                                .attr("x",width2/2 - 320)
                                                 .attr("y",height2 - 220)
                                                 .text("Made for Kids")
                                                 .style("fill", "#282828")
@@ -286,7 +286,7 @@
                                                 .attr("alignment-baseline","middle");
 
                                             svg2.append("text")
-                                                .attr("x",width2/2 + 320)
+                                                .attr("x",width2/2 - 320)
                                                 .attr("y",height2 - 180)
                                                 .text("Not for Kids")
                                                 .style("fill", "#282828")
@@ -318,6 +318,7 @@
                                             const img_height = 272.5;
                                             const translate_down = (def_svg_height - img_height) / 2;
                                             const quality_pie_width = def_svg_width - img_width - pie_margin;
+
                                             let pie_area = def_svg.append("g")
                                                 .attr("transform", "translate("+ ((quality_pie_width / 2) - 50) + "," + height2 / 2 + ")")
                                                 .attr("width", quality_pie_width)
@@ -345,6 +346,33 @@
                                                 .attr("fill", d => {return(quality_color(d.data.key))})
                                                 .attr("stroke", "white");
 
+                                            def_svg.append("circle")
+                                                .attr("cx",quality_pie_width/2 - 420)
+                                                .attr("cy",height2 - 220)
+                                                .attr("r", 6)
+                                                .style("fill", "#FF0000")
+
+                                            def_svg.append("circle")
+                                                .attr("cx",quality_pie_width/2 - 420)
+                                                .attr("cy",height2 - 180)
+                                                .attr("r", 6)
+                                                .style("fill", "#282828");
+
+                                            def_svg.append("text")
+                                                .attr("x",quality_pie_width/2 - 400)
+                                                .attr("y",height2 - 220)
+                                                .text("Standard Definition (SD)")
+                                                .style("fill", "#282828")
+                                                .style("font-size", 12)
+                                                .attr("alignment-baseline","middle");
+
+                                            def_svg.append("text")
+                                                .attr("x",quality_pie_width/2 - 400)
+                                                .attr("y",height2 - 180)
+                                                .text("High Definition (HD)")
+                                                .style("fill", "#282828")
+                                                .style("font-size", 12)
+                                                .attr("alignment-baseline","middle");
                                             
                                             let img_area = def_svg.append("g")
                                                 .attr("transform", "translate(" + def_svg_width / 2 + ", 0)")
