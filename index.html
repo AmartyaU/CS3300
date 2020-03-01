@@ -56,10 +56,6 @@
             border-radius: 20px;
         }
 
-        /* .svg {
-            margin-left: 15%;
-        } */
-
         /* Center the SVG */
         .svg_container {
             text-align: center;
@@ -127,416 +123,383 @@
                 of the most popular vids on Youtube </div>
         </p>
         <script>
-            let result = [];
-            d3.json("./most_popular_youtube_videos_usa_page1.json", d3.autoType)
-                .then((data1) => {
-
-                    result = result.concat(data1.items);
-
-                    d3.json("./most_popular_youtube_videos_usa_page2.json", d3.autoType)
-                        .then((data2) => {
-
-                            result = result.concat(data2.items);
-
-                            d3.json("./most_popular_youtube_videos_usa_page3.json", d3.autoType)
-                                .then((data3) => {
-
-                                    result = result.concat(data3.items);
-
-                                    d3.json("./most_popular_youtube_videos_usa_page4.json", d3.autoType)
-                                        .then((data4) => {
-
-                                            const width = 800;
-                                            const height = 800;
-                                            const svg = d3.select("#bar_chart").append("svg")
-                                                .attr("class", "svg")
-                                                .attr("width", width)
-                                                .attr("height", height);
-
-                                            result = result.concat(data4.items);
-                                            // console.log("combined result", result);
-
-                                            const xScale = d3.scaleBand()
-                                                .domain([1, 2, 10, 17, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29])
-                                                .range([40, width - 20])
-                                                .padding(0.1);
-
-                                            const yScale = d3.scaleLinear()
-                                                .domain([0, 50])
-                                                .range([height - 20, 20]);
-
-                                            // do stuff/explore
-                                            // In final version, will concat data into a single file rather than doing it here
-
-                                            const categories = {};
-                                            result.forEach(d => {
-                                                category = d.snippet.categoryId;
-                                                if (categories[category]) {
-                                                    categories[category] += 1;
-                                                } else {
-                                                    categories[category] = 1;
-                                                }
-                                            });
-                                            // console.log(categories);
-
-                                            const categoryScale = d3.scaleOrdinal(d3.schemeCategory10);
-
-                                            let leftAxis = d3.axisLeft(yScale);
-                                            svg.append("g")
-                                                .attr("class", "y axis")
-                                                .attr("transform", "translate(20, 0)")
-                                                .call(leftAxis);
-
-                                            let bottomAxis = d3.axisBottom(xScale)
-                                                .ticks(3)
-                                                .tickSize(0);
-                                            svg.append("g")
-                                                .attr("class", "x axis")
-                                                .attr("transform", "translate(-20, 780)")
-                                                .call(bottomAxis);
-
-                                            let leftGridlines = d3.axisLeft(yScale)
-                                                .tickSize(-width + 40)
-                                                .tickFormat("");
-                                            svg.append("g").attr("class", "y gridlines")
-                                                .attr("transform", "translate(20, 0)")
-                                                .call(leftGridlines);
-
-                                            Object.keys(categories).forEach((key, i) => {
-                                                // console.log(key, categories[key]);
-
-                                                svg.append("line")
-                                                    .attr("x1", xScale(key))
-                                                    .attr("x2", xScale(key))
-                                                    .attr("y1", height - 20)
-                                                    .attr("y2", yScale(categories[key]))
-                                                    .style("stroke", categoryScale(key))
-                                                    .style("stroke-width", 35);
-                                            });
-                                            // console.log(categoryScale.domain());
-
-                                            // Add more code below
-                                            // Part 2 - Made for Kids or not
-
-                                            // const width2 = d3.select("#kidschart").style("width")
-                                            const width2 = Math.floor(Number(d3.select("#kids_chart").style("width").replace("p", "").replace("x", "")));
-                                            const height2 = 400, pie_margin = 20;
-
-                                            const rad = Math.min(width2, height2) / 2 - pie_margin;
-
-                                            const svg2 = d3.select("div#kids_chart").append("svg")
-                                                .attr("class", "svg")
-                                                .attr("id", "svg2")
-                                                .attr("width", width2)
-                                                .attr("height", height2);
-
-                                            const g2 = svg2.append("g").attr("transform", "translate(" + width2 / 2 + "," + height2 / 2 + ")");
-
-                                            let kid_friendly = 0;
-                                            let not_kid_targeted = 0;
-
-                                            result.forEach(d => {
-                                                if (d.status.madeForKids) {
-                                                    kid_friendly += 1;
-                                                }
-                                                else {
-                                                    not_kid_targeted += 1;
-                                                }
-                                            })
-
-                                            var data = { "Made for Kids": kid_friendly, "Not for Kids": not_kid_targeted };
-
-                                            var kids_color = d3.scaleOrdinal()
-                                                .domain(data)
-                                                .range(["#FF0000", "#282828"]);
-                                            var kids_pie = d3.pie()
-                                                .value(d => { return d.value; });
-
-                                            var pie_data = kids_pie(d3.entries(data));
-
-                                            var arc = d3.arc()
-                                                .innerRadius(100)
-                                                .outerRadius(rad);
-
-                                            g2.selectAll("slice")
-                                                .data(pie_data)
-                                                .enter()
-                                                .append("path")
-                                                .attr("d", arc)
-                                                .attr("fill", d => { return (kids_color(d.data.key)) })
-                                                .attr("stroke", "white");
-
-
-                                            svg2.append("circle")
-                                                .attr("cx", width2 / 2 - 340)
-                                                .attr("cy", height2 - 220)
-                                                .attr("r", 6)
-                                                .style("fill", "#FF0000")
-
-                                            svg2.append("circle")
-                                                .attr("cx", width2 / 2 - 340)
-                                                .attr("cy", height2 - 180)
-                                                .attr("r", 6)
-                                                .style("fill", "#282828");
-
-                                            svg2.append("text")
-                                                .attr("x", width2 / 2 - 320)
-                                                .attr("y", height2 - 220)
-                                                .text("Made for Kids")
-                                                .style("fill", "#282828")
-                                                .style("font-size", 12)
-                                                .attr("alignment-baseline", "middle");
-
-                                            svg2.append("text")
-                                                .attr("x", width2 / 2 - 320)
-                                                .attr("y", height2 - 180)
-                                                .text("Not for Kids")
-                                                .style("fill", "#282828")
-                                                .style("font-size", 12)
-                                                .attr("alignment-baseline", "middle");
-
-
-                                            // Part 3 - Standard vs High Definition
-                                            let num_hd = 0;
-                                            let num_sd = 0;
-                                            result.forEach(d => {
-                                                let vid_def = d.contentDetails.definition;
-                                                // console.log(vid_def);
-                                                if (vid_def == "hd") {
-                                                    num_hd += 1;
-                                                }
-                                                else {
-                                                    num_sd += 1;
-                                                }
-                                            })
-
-                                            var quality_data = { "HD": num_hd, "SD": num_sd };
-
-                                            let def_svg = d3.selectAll("#comparison_img");
-
-                                            const def_svg_height = def_svg.attr("height");
-                                            const def_svg_width = def_svg.attr("width");
-                                            const img_width = 483;
-                                            const img_height = 272.5;
-                                            const translate_down = (def_svg_height - img_height) / 2;
-                                            const quality_pie_width = def_svg_width - img_width - pie_margin;
-
-                                            let pie_area = def_svg.append("g")
-                                                .attr("transform", "translate(" + ((quality_pie_width / 2) - 50) + "," + height2 / 2 + ")")
-                                                .attr("width", quality_pie_width)
-                                                .attr("height", img_height);
-
-                                            const rad2 = Math.min(width2, height2) / 2 - pie_margin;
-
-                                            var quality_color = d3.scaleOrdinal()
-                                                .domain(quality_data)
-                                                .range(["#282828", "#FF0000"]);
-                                            var quality_pie = d3.pie()
-                                                .value(d => { return d.value; });
-
-                                            var quality_data = quality_pie(d3.entries(quality_data));
-
-                                            var quality_arc = d3.arc()
-                                                .innerRadius(100)
-                                                .outerRadius(rad2);
-
-                                            pie_area.selectAll("slice")
-                                                .data(quality_data)
-                                                .enter()
-                                                .append("path")
-                                                .attr("d", quality_arc)
-                                                .attr("fill", d => { return (quality_color(d.data.key)) })
-                                                .attr("stroke", "white");
-
-                                            def_svg.append("circle")
-                                                .attr("cx", quality_pie_width / 2 - 420)
-                                                .attr("cy", height2 - 220)
-                                                .attr("r", 6)
-                                                .style("fill", "#FF0000")
-
-                                            def_svg.append("circle")
-                                                .attr("cx", quality_pie_width / 2 - 420)
-                                                .attr("cy", height2 - 180)
-                                                .attr("r", 6)
-                                                .style("fill", "#282828");
-
-                                            def_svg.append("text")
-                                                .attr("x", quality_pie_width / 2 - 400)
-                                                .attr("y", height2 - 220)
-                                                .text("Standard Definition (SD)")
-                                                .style("fill", "#282828")
-                                                .style("font-size", 12)
-                                                .attr("alignment-baseline", "middle");
-
-                                            def_svg.append("text")
-                                                .attr("x", quality_pie_width / 2 - 400)
-                                                .attr("y", height2 - 180)
-                                                .text("High Definition (HD)")
-                                                .style("fill", "#282828")
-                                                .style("font-size", 12)
-                                                .attr("alignment-baseline", "middle");
-
-                                            let img_area = def_svg.append("g")
-                                                .attr("transform", "translate(" + def_svg_width / 2 + ", 0)")
-                                                .attr("width", img_width)
-                                                .attr("height", img_height);
-
-                                            /** Used this link https://fabiofranchino.com/blog/how-to-load-image-in-svg-with-d3js/ 
-                                             *  to learn how to append images using d3 **/
-                                            img_area.append("image")
-                                                .attr("xlink:href", "vid_img.png")
-                                                .attr("transform", "translate(0, " + translate_down + ")")
-                                                .attr('width', img_width)
-                                                .attr('height', img_height);
-                                            img_area.append("rect")
-                                                .attr("transform", "translate(0, " + translate_down + ")")
-                                                .attr("x", 24 * img_width / 25)
-                                                .attr("y", 0)
-                                                .attr("width", img_width / 25)
-                                                .attr("height", img_height)
-                                                .style("fill", "white")
-                                                .style("opacity", 0.8);
-
-                                            // img_area.append("image")
-                                            //     .attr("xlink:href", "vid_img_left.jpg")
-                                            //     .attr("transform", "translate(0, " + translate_down + ")")
-                                            //     .attr('width', img_width / 2)
-                                            //     .attr('height', img_height);
-                                            // img_area.append("image")
-                                            //     .attr("xlink:href", "vid_img_right.jpg")
-                                            //     .attr("transform", "translate(" + img_width / 2 + "," + translate_down + ")")
-                                            //     .attr('width', img_width / 2)
-                                            //     .attr('height', img_height)
-                                            //     .style("filter", "url(#f1)");
-
-
-                                            // img_area.append("text")
-                                            //     .attr("transform", "translate(" + img_width / 4 + ", " + (translate_down + img_height / 2) + ")")
-                                            //     .style("text-anchor", "middle")
-                                            //     .style("fill", "#ffee8f")
-                                            //     .style("font-size", 50)
-                                            //     .style("font-family", "Impact")
-                                            //     .style("stroke-width", 1)
-                                            //     .style("stroke", "black")
-                                            //     .text("HD: 193")
-
-                                            // img_area.append("text")
-                                            //     .attr("transform", "translate(" + 3 * img_width / 4 + ", " + (translate_down + img_height / 2) + ")")
-                                            //     .style("text-anchor", "middle")
-                                            //     .style("fill", "#ffee8f")
-                                            //     .style("font-size", 50)
-                                            //     .style("font-family", "Impact")
-                                            //     .style("stroke-width", 1)
-                                            //     .style("stroke", "black")
-                                            //     .text("SD: 7")
-
-                                            // img_area.append("rect")
-                                            //     .attr("transform", "translate(0," + translate_down + ")")
-                                            //     .attr("x", 0)
-                                            //     .attr("y", 0)
-                                            //     .attr("width", img_width / 2)
-                                            //     .attr("height", 10)
-                                            //     .style("fill", "white");
-
-                                            // img_area.append("rect")
-                                            //     .attr("transform", "translate(0, " + translate_down + ")")
-                                            //     .attr("x", img_width / 2)
-                                            //     .attr("y", 0)
-                                            //     .attr("width", img_width / 2)
-                                            //     .attr("height", 263)
-                                            //     .style("fill", "white");
-
-                                            // Part 4 - Top Tags 
-                                            // Getting top 20 tags 
-                                            let tagCount = 0;
-                                            let tags = {};
-                                            result.forEach(d => {
-                                                let tagList = d.snippet.tags;
-                                                if (tagList) {
-                                                    tagCount += tagList.length;
-                                                    tagList.forEach(item => {
-                                                        if (tags[item]) {
-                                                            tags[item] += 1;
-                                                        }
-                                                        else {
-                                                            tags[item] = 1;
-                                                        }
-                                                    })
-                                                }
-                                            })
-                                            // console.log(tagCount / 200);
-
-                                            /** Code for retrieving the top 20 tags was written with the guidance of this website
-                                            https://stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys **/
-                                            var props = Object.keys(tags).map(function (key) {
-                                                return { key: key, value: this[key] };
-                                            }, tags);
-                                            props.sort(function (p1, p2) { return p2.value - p1.value; });
-                                            var topTags = props.slice(0, 20);
-                                            // console.log(topTags);
-
-                                            // Word Cloud code 
-                                            // const tagScale = d3.scaleOrdinal(d3.schemePaired);
-                                            // const tagScale = d3.scaleOrdinal(["#f53325", "#737373", "#000000"]);
-                                            // const tagScale = d3.scaleOrdinal(["#e60702", "#ff8b17", "#00b51b", "#ffe500", "#00adb3", "#1e33ba", "#8c2fd4", "#ff6eb6", "#ff6b6b", "#92eb6a"])
-                                            const tagScale = d3.scaleOrdinal(["#ff2e2e", "#cab2d6", "#fb9b99", "#00c40a", "#00adc4", "#834bbf", "#d41c98", "#ffb0e5", "#ffab2e", "#ffd712", "#82d1ff"])
-                                            /** https://bl.ocks.org/TaraZhu/120d48c43be68e92da304cb08235d052 **/
-                                            // const tagScale2 = d3.scaleSequential()
-                                            //     .domain([-20, 150])
-                                            //     .interpolator(d3.interpolateGreens);
-                                            const wordCloud_width = 700;
-                                            const wordCloud_height = 400;
-
-                                            let wordCloud_svg = d3.select("#word_cloud").append("svg")
-                                                .attr("width", wordCloud_width)
-                                                .attr("height", wordCloud_height);
-
-                                            /** Construct a cloud layout instance **/
-                                            var layout = d3.layout.cloud()
-                                                .size([wordCloud_width, wordCloud_height])
-                                                .words(topTags.map(function (d) { return { text: d.key, size: 6 * d.value }; }))
-                                                .padding(5)                                         //space between words
-                                                .rotate(0)
-                                                .fontSize(function (d) { return d.size; })          // font size of words
-                                                .random(function (d) { return 0.4; })              // taken from https://stackoverflow.com/questions/42941368/keep-d3-cloud-consistent-between-refreshes-with-a-seed-value to prevent it from changing when refreshed
-                                                .on("end", draw);
-                                            layout.start();
-
-                                            /** Take the output of layout and draw the words (fill depends on the word, font-size 
-                                             *  depends on the frequency **/
-                                            function draw(words) {
-                                                wordCloud_svg.append("g")
-                                                    .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
-                                                    .selectAll("text")
-                                                    .data(words)
-                                                    .enter().append("text")
-                                                    .style("font-size", function (d) { return d.size; })
-                                                    .style("fill", function (d) { return tagScale(d.text) })
-                                                    .attr("text-anchor", "middle")
-                                                    .style("font-family", "Impact")
-                                                    .attr("transform", function (d) {
-                                                        return "translate(" + [d.x, d.y] + ")";
-                                                    })
-                                                    .text(function (d) { return d.text; });
-                                            }
-
-                                        }, (error) => {
-                                            console.log(error);
-                                            return;
-                                        });
-
-                                }, (error) => {
-                                    console.log(error);
-                                    return;
-                                });
-
-                        }, (error) => {
-                            console.log(error);
-                            return;
-                        });
+            d3.json("./all_most_popular_youtube_videos_usa_page.json", d3.autoType)
+                .then((result) => {
+
+                    const width = 800;
+                    const height = 800;
+                    const svg = d3.select("#bar_chart").append("svg")
+                        .attr("class", "svg")
+                        .attr("width", width)
+                        .attr("height", height);
+
+                    const xScale = d3.scaleBand()
+                        .domain([1, 2, 10, 17, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29])
+                        .range([40, width - 20])
+                        .padding(0.1);
+
+                    const yScale = d3.scaleLinear()
+                        .domain([0, 50])
+                        .range([height - 20, 20]);
+
+                    // do stuff/explore
+                    // In final version, will concat data into a single file rather than doing it here
+
+                    const categories = {};
+                    result.forEach(d => {
+                        category = d.snippet.categoryId;
+                        if (categories[category]) {
+                            categories[category] += 1;
+                        } else {
+                            categories[category] = 1;
+                        }
+                    });
+                    // console.log(categories);
+
+                    const categoryScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+                    let leftAxis = d3.axisLeft(yScale);
+                    svg.append("g")
+                        .attr("class", "y axis")
+                        .attr("transform", "translate(20, 0)")
+                        .call(leftAxis);
+
+                    let bottomAxis = d3.axisBottom(xScale)
+                        .ticks(3)
+                        .tickSize(0);
+                    svg.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(-20, 780)")
+                        .call(bottomAxis);
+
+                    let leftGridlines = d3.axisLeft(yScale)
+                        .tickSize(-width + 40)
+                        .tickFormat("");
+                    svg.append("g").attr("class", "y gridlines")
+                        .attr("transform", "translate(20, 0)")
+                        .call(leftGridlines);
+
+                    Object.keys(categories).forEach((key, i) => {
+                        // console.log(key, categories[key]);
+
+                        svg.append("line")
+                            .attr("x1", xScale(key))
+                            .attr("x2", xScale(key))
+                            .attr("y1", height - 20)
+                            .attr("y2", yScale(categories[key]))
+                            .style("stroke", categoryScale(key))
+                            .style("stroke-width", 35);
+                    });
+                    // console.log(categoryScale.domain());
+
+                    // Add more code below
+                    // Part 2 - Made for Kids or not
+
+                    // const width2 = d3.select("#kidschart").style("width")
+                    const width2 = Math.floor(Number(d3.select("#kids_chart").style("width").replace("p", "").replace("x", "")));
+                    const height2 = 400, pie_margin = 20;
+
+                    const rad = Math.min(width2, height2) / 2 - pie_margin;
+
+                    const svg2 = d3.select("div#kids_chart").append("svg")
+                        .attr("class", "svg")
+                        .attr("id", "svg2")
+                        .attr("width", width2)
+                        .attr("height", height2);
+
+                    const g2 = svg2.append("g").attr("transform", "translate(" + width2 / 2 + "," + height2 / 2 + ")");
+
+                    let kid_friendly = 0;
+                    let not_kid_targeted = 0;
+
+                    result.forEach(d => {
+                        if (d.status.madeForKids) {
+                            kid_friendly += 1;
+                        }
+                        else {
+                            not_kid_targeted += 1;
+                        }
+                    })
+
+                    var data = { "Made for Kids": kid_friendly, "Not for Kids": not_kid_targeted };
+
+                    var kids_color = d3.scaleOrdinal()
+                        .domain(data)
+                        .range(["#FF0000", "#282828"]);
+                    var kids_pie = d3.pie()
+                        .value(d => { return d.value; });
+
+                    var pie_data = kids_pie(d3.entries(data));
+
+                    var arc = d3.arc()
+                        .innerRadius(100)
+                        .outerRadius(rad);
+
+                    g2.selectAll("slice")
+                        .data(pie_data)
+                        .enter()
+                        .append("path")
+                        .attr("d", arc)
+                        .attr("fill", d => { return (kids_color(d.data.key)) })
+                        .attr("stroke", "white");
+
+
+                    svg2.append("circle")
+                        .attr("cx", width2 / 2 - 340)
+                        .attr("cy", height2 - 220)
+                        .attr("r", 6)
+                        .style("fill", "#FF0000")
+
+                    svg2.append("circle")
+                        .attr("cx", width2 / 2 - 340)
+                        .attr("cy", height2 - 180)
+                        .attr("r", 6)
+                        .style("fill", "#282828");
+
+                    svg2.append("text")
+                        .attr("x", width2 / 2 - 320)
+                        .attr("y", height2 - 220)
+                        .text("Made for Kids")
+                        .style("fill", "#282828")
+                        .style("font-size", 12)
+                        .attr("alignment-baseline", "middle");
+
+                    svg2.append("text")
+                        .attr("x", width2 / 2 - 320)
+                        .attr("y", height2 - 180)
+                        .text("Not for Kids")
+                        .style("fill", "#282828")
+                        .style("font-size", 12)
+                        .attr("alignment-baseline", "middle");
+
+
+                    // Part 3 - Standard vs High Definition
+                    let num_hd = 0;
+                    let num_sd = 0;
+                    result.forEach(d => {
+                        let vid_def = d.contentDetails.definition;
+                        // console.log(vid_def);
+                        if (vid_def == "hd") {
+                            num_hd += 1;
+                        }
+                        else {
+                            num_sd += 1;
+                        }
+                    })
+
+                    var quality_data = { "HD": num_hd, "SD": num_sd };
+
+                    let def_svg = d3.selectAll("#comparison_img");
+
+                    const def_svg_height = def_svg.attr("height");
+                    const def_svg_width = def_svg.attr("width");
+                    const img_width = 483;
+                    const img_height = 272.5;
+                    const translate_down = (def_svg_height - img_height) / 2;
+                    const quality_pie_width = def_svg_width - img_width - pie_margin;
+
+                    let pie_area = def_svg.append("g")
+                        .attr("transform", "translate(" + ((quality_pie_width / 2) - 50) + "," + height2 / 2 + ")")
+                        .attr("width", quality_pie_width)
+                        .attr("height", img_height);
+
+                    const rad2 = Math.min(width2, height2) / 2 - pie_margin;
+
+                    var quality_color = d3.scaleOrdinal()
+                        .domain(quality_data)
+                        .range(["#282828", "#FF0000"]);
+                    var quality_pie = d3.pie()
+                        .value(d => { return d.value; });
+
+                    var quality_data = quality_pie(d3.entries(quality_data));
+
+                    var quality_arc = d3.arc()
+                        .innerRadius(100)
+                        .outerRadius(rad2);
+
+                    pie_area.selectAll("slice")
+                        .data(quality_data)
+                        .enter()
+                        .append("path")
+                        .attr("d", quality_arc)
+                        .attr("fill", d => { return (quality_color(d.data.key)) })
+                        .attr("stroke", "white");
+
+                    def_svg.append("circle")
+                        .attr("cx", quality_pie_width / 2 - 420)
+                        .attr("cy", height2 - 220)
+                        .attr("r", 6)
+                        .style("fill", "#FF0000")
+
+                    def_svg.append("circle")
+                        .attr("cx", quality_pie_width / 2 - 420)
+                        .attr("cy", height2 - 180)
+                        .attr("r", 6)
+                        .style("fill", "#282828");
+
+                    def_svg.append("text")
+                        .attr("x", quality_pie_width / 2 - 400)
+                        .attr("y", height2 - 220)
+                        .text("Standard Definition (SD)")
+                        .style("fill", "#282828")
+                        .style("font-size", 12)
+                        .attr("alignment-baseline", "middle");
+
+                    def_svg.append("text")
+                        .attr("x", quality_pie_width / 2 - 400)
+                        .attr("y", height2 - 180)
+                        .text("High Definition (HD)")
+                        .style("fill", "#282828")
+                        .style("font-size", 12)
+                        .attr("alignment-baseline", "middle");
+
+                    let img_area = def_svg.append("g")
+                        .attr("transform", "translate(" + def_svg_width / 2 + ", 0)")
+                        .attr("width", img_width)
+                        .attr("height", img_height);
+
+                    /** Used this link https://fabiofranchino.com/blog/how-to-load-image-in-svg-with-d3js/ 
+                        *  to learn how to append images using d3 **/
+                    img_area.append("image")
+                        .attr("xlink:href", "vid_img.png")
+                        .attr("transform", "translate(0, " + translate_down + ")")
+                        .attr('width', img_width)
+                        .attr('height', img_height);
+                    img_area.append("rect")
+                        .attr("transform", "translate(0, " + translate_down + ")")
+                        .attr("x", 24 * img_width / 25)
+                        .attr("y", 0)
+                        .attr("width", img_width / 25)
+                        .attr("height", img_height)
+                        .style("fill", "white")
+                        .style("opacity", 0.8);
+
+                    // img_area.append("image")
+                    //     .attr("xlink:href", "vid_img_left.jpg")
+                    //     .attr("transform", "translate(0, " + translate_down + ")")
+                    //     .attr('width', img_width / 2)
+                    //     .attr('height', img_height);
+                    // img_area.append("image")
+                    //     .attr("xlink:href", "vid_img_right.jpg")
+                    //     .attr("transform", "translate(" + img_width / 2 + "," + translate_down + ")")
+                    //     .attr('width', img_width / 2)
+                    //     .attr('height', img_height)
+                    //     .style("filter", "url(#f1)");
+
+
+                    // img_area.append("text")
+                    //     .attr("transform", "translate(" + img_width / 4 + ", " + (translate_down + img_height / 2) + ")")
+                    //     .style("text-anchor", "middle")
+                    //     .style("fill", "#ffee8f")
+                    //     .style("font-size", 50)
+                    //     .style("font-family", "Impact")
+                    //     .style("stroke-width", 1)
+                    //     .style("stroke", "black")
+                    //     .text("HD: 193")
+
+                    // img_area.append("text")
+                    //     .attr("transform", "translate(" + 3 * img_width / 4 + ", " + (translate_down + img_height / 2) + ")")
+                    //     .style("text-anchor", "middle")
+                    //     .style("fill", "#ffee8f")
+                    //     .style("font-size", 50)
+                    //     .style("font-family", "Impact")
+                    //     .style("stroke-width", 1)
+                    //     .style("stroke", "black")
+                    //     .text("SD: 7")
+
+                    // img_area.append("rect")
+                    //     .attr("transform", "translate(0," + translate_down + ")")
+                    //     .attr("x", 0)
+                    //     .attr("y", 0)
+                    //     .attr("width", img_width / 2)
+                    //     .attr("height", 10)
+                    //     .style("fill", "white");
+
+                    // img_area.append("rect")
+                    //     .attr("transform", "translate(0, " + translate_down + ")")
+                    //     .attr("x", img_width / 2)
+                    //     .attr("y", 0)
+                    //     .attr("width", img_width / 2)
+                    //     .attr("height", 263)
+                    //     .style("fill", "white");
+
+                    // Part 4 - Top Tags 
+                    // Getting top 20 tags 
+                    let tagCount = 0;
+                    let tags = {};
+                    result.forEach(d => {
+                        let tagList = d.snippet.tags;
+                        if (tagList) {
+                            tagCount += tagList.length;
+                            tagList.forEach(item => {
+                                if (tags[item]) {
+                                    tags[item] += 1;
+                                }
+                                else {
+                                    tags[item] = 1;
+                                }
+                            })
+                        }
+                    })
+                    // console.log(tagCount / 200);
+
+                    /** Code for retrieving the top 20 tags was written with the guidance of this website
+                    https://stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys **/
+                    var props = Object.keys(tags).map(function (key) {
+                        return { key: key, value: this[key] };
+                    }, tags);
+                    props.sort(function (p1, p2) { return p2.value - p1.value; });
+                    var topTags = props.slice(0, 20);
+                    // console.log(topTags);
+
+                    // Word Cloud code 
+                    // const tagScale = d3.scaleOrdinal(d3.schemePaired);
+                    // const tagScale = d3.scaleOrdinal(["#f53325", "#737373", "#000000"]);
+                    // const tagScale = d3.scaleOrdinal(["#e60702", "#ff8b17", "#00b51b", "#ffe500", "#00adb3", "#1e33ba", "#8c2fd4", "#ff6eb6", "#ff6b6b", "#92eb6a"])
+                    const tagScale = d3.scaleOrdinal(["#ff2e2e", "#cab2d6", "#fb9b99", "#00c40a", "#00adc4", "#834bbf", "#d41c98", "#ffb0e5", "#ffab2e", "#ffd712", "#82d1ff"])
+                    /** https://bl.ocks.org/TaraZhu/120d48c43be68e92da304cb08235d052 **/
+                    // const tagScale2 = d3.scaleSequential()
+                    //     .domain([-20, 150])
+                    //     .interpolator(d3.interpolateGreens);
+                    const wordCloud_width = 700;
+                    const wordCloud_height = 400;
+
+                    let wordCloud_svg = d3.select("#word_cloud").append("svg")
+                        .attr("width", wordCloud_width)
+                        .attr("height", wordCloud_height);
+
+                    /** Construct a cloud layout instance **/
+                    var layout = d3.layout.cloud()
+                        .size([wordCloud_width, wordCloud_height])
+                        .words(topTags.map(function (d) { return { text: d.key, size: 6 * d.value }; }))
+                        .padding(5)                                         //space between words
+                        .rotate(0)
+                        .fontSize(function (d) { return d.size; })          // font size of words
+                        .random(function (d) { return 0.4; })              // taken from https://stackoverflow.com/questions/42941368/keep-d3-cloud-consistent-between-refreshes-with-a-seed-value to prevent it from changing when refreshed
+                        .on("end", draw);
+                    layout.start();
+
+                    /** Take the output of layout and draw the words (fill depends on the word, font-size 
+                        *  depends on the frequency **/
+                    function draw(words) {
+                        wordCloud_svg.append("g")
+                            .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+                            .selectAll("text")
+                            .data(words)
+                            .enter().append("text")
+                            .style("font-size", function (d) { return d.size; })
+                            .style("fill", function (d) { return tagScale(d.text) })
+                            .attr("text-anchor", "middle")
+                            .style("font-family", "Impact")
+                            .attr("transform", function (d) {
+                                return "translate(" + [d.x, d.y] + ")";
+                            })
+                            .text(function (d) { return d.text; });
+                    }
 
                 }, (error) => {
                     console.log(error);
+                    return;
                 });
 
         </script>
