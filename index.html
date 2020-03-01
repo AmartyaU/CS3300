@@ -3,7 +3,7 @@
 <head>
     <title>INFO 3300 - Project 1</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+    <script src="d3.layout.cloud.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Noto+Serif&display=swap" rel="stylesheet">
     <style>
         body,
@@ -96,9 +96,11 @@
                 form without the meaning of the text influencing the design.</div>
         </p>
         <p id="part2">
-            <div id = "kids_chart" class="svg_container"></div>
-            <div class="para">Only 1 video out of all 200 trending videos was specifically targeted towards kids. A staggering majority
-                of trending videos on YouTube were not found in the kids category. Interestingly, the video found in the kids category is 
+            <div id="kids_chart" class="svg_container"></div>
+            <div class="para">Only 1 video out of all 200 trending videos was specifically targeted towards kids. A
+                staggering majority
+                of trending videos on YouTube were not found in the kids category. Interestingly, the video found in the
+                kids category is
                 about a show called The Steven Universe, which has a sizeable teenager and adult following.
             </div>
         </p>
@@ -217,8 +219,8 @@
                                             // Part 2 - Made for Kids or not
 
                                             // const width2 = d3.select("#kidschart").style("width")
-                                            const width2 = Math.floor(Number(d3.select("#kids_chart").style("width").replace("p","").replace("x","")));
-                                            const height2 = 400, pie_margin= 20;
+                                            const width2 = Math.floor(Number(d3.select("#kids_chart").style("width").replace("p", "").replace("x", "")));
+                                            const height2 = 400, pie_margin = 20;
 
                                             const rad = Math.min(width2, height2) / 2 - pie_margin;
 
@@ -227,8 +229,8 @@
                                                 .attr("id", "svg2")
                                                 .attr("width", width2)
                                                 .attr("height", height2);
-                                            
-                                            const g2 = svg2.append("g").attr("transform", "translate("+ width2 / 2 + "," + height2 / 2 + ")");
+
+                                            const g2 = svg2.append("g").attr("transform", "translate(" + width2 / 2 + "," + height2 / 2 + ")");
 
                                             let kid_friendly = 0;
                                             let not_kid_targeted = 0;
@@ -242,14 +244,14 @@
                                                 }
                                             })
 
-                                            var data = {"Made for Kids": kid_friendly, "Not for Kids": not_kid_targeted};
+                                            var data = { "Made for Kids": kid_friendly, "Not for Kids": not_kid_targeted };
 
                                             var kids_color = d3.scaleOrdinal()
                                                 .domain(data)
-                                                .range(["#FF0000","#282828"]);
+                                                .range(["#FF0000", "#282828"]);
                                             var kids_pie = d3.pie()
-                                                .value(d => {return d.value;});
-                                            
+                                                .value(d => { return d.value; });
+
                                             var pie_data = kids_pie(d3.entries(data));
 
                                             var arc = d3.arc()
@@ -261,39 +263,39 @@
                                                 .enter()
                                                 .append("path")
                                                 .attr("d", arc)
-                                                .attr("fill", d => {return(kids_color(d.data.key))})
+                                                .attr("fill", d => { return (kids_color(d.data.key)) })
                                                 .attr("stroke", "white");
-                                            
-                                            
+
+
                                             svg2.append("circle")
-                                                .attr("cx",width2/2 - 340)
-                                                .attr("cy",height2 - 220)
+                                                .attr("cx", width2 / 2 - 340)
+                                                .attr("cy", height2 - 220)
                                                 .attr("r", 6)
                                                 .style("fill", "#FF0000")
 
                                             svg2.append("circle")
-                                                .attr("cx",width2/2 - 340)
-                                                .attr("cy",height2 - 180)
+                                                .attr("cx", width2 / 2 - 340)
+                                                .attr("cy", height2 - 180)
                                                 .attr("r", 6)
                                                 .style("fill", "#282828");
 
                                             svg2.append("text")
-                                                .attr("x",width2/2 - 320)
-                                                .attr("y",height2 - 220)
+                                                .attr("x", width2 / 2 - 320)
+                                                .attr("y", height2 - 220)
                                                 .text("Made for Kids")
                                                 .style("fill", "#282828")
                                                 .style("font-size", 12)
-                                                .attr("alignment-baseline","middle");
+                                                .attr("alignment-baseline", "middle");
 
                                             svg2.append("text")
-                                                .attr("x",width2/2 - 320)
-                                                .attr("y",height2 - 180)
+                                                .attr("x", width2 / 2 - 320)
+                                                .attr("y", height2 - 180)
                                                 .text("Not for Kids")
                                                 .style("fill", "#282828")
                                                 .style("font-size", 12)
-                                                .attr("alignment-baseline","middle");
+                                                .attr("alignment-baseline", "middle");
 
-                                            
+
                                             // Part 3 - Standard vs High Definition
                                             let num_hd = 0;
                                             let num_sd = 0;
@@ -308,7 +310,7 @@
                                                 }
                                             })
 
-                                            var quality_data = {"HD": num_hd, "SD": num_sd};
+                                            var quality_data = { "HD": num_hd, "SD": num_sd };
 
                                             let def_svg = d3.selectAll("#comparison_img");
 
@@ -320,18 +322,18 @@
                                             const quality_pie_width = def_svg_width - img_width - pie_margin;
 
                                             let pie_area = def_svg.append("g")
-                                                .attr("transform", "translate("+ ((quality_pie_width / 2) - 50) + "," + height2 / 2 + ")")
+                                                .attr("transform", "translate(" + ((quality_pie_width / 2) - 50) + "," + height2 / 2 + ")")
                                                 .attr("width", quality_pie_width)
                                                 .attr("height", img_height);
-                                            
+
                                             const rad2 = Math.min(width2, height2) / 2 - pie_margin;
 
                                             var quality_color = d3.scaleOrdinal()
                                                 .domain(quality_data)
-                                                .range(["#282828","#FF0000"]);
+                                                .range(["#282828", "#FF0000"]);
                                             var quality_pie = d3.pie()
-                                                .value(d => {return d.value;});
-                                            
+                                                .value(d => { return d.value; });
+
                                             var quality_data = quality_pie(d3.entries(quality_data));
 
                                             var quality_arc = d3.arc()
@@ -343,37 +345,37 @@
                                                 .enter()
                                                 .append("path")
                                                 .attr("d", quality_arc)
-                                                .attr("fill", d => {return(quality_color(d.data.key))})
+                                                .attr("fill", d => { return (quality_color(d.data.key)) })
                                                 .attr("stroke", "white");
 
                                             def_svg.append("circle")
-                                                .attr("cx",quality_pie_width/2 - 420)
-                                                .attr("cy",height2 - 220)
+                                                .attr("cx", quality_pie_width / 2 - 420)
+                                                .attr("cy", height2 - 220)
                                                 .attr("r", 6)
                                                 .style("fill", "#FF0000")
 
                                             def_svg.append("circle")
-                                                .attr("cx",quality_pie_width/2 - 420)
-                                                .attr("cy",height2 - 180)
+                                                .attr("cx", quality_pie_width / 2 - 420)
+                                                .attr("cy", height2 - 180)
                                                 .attr("r", 6)
                                                 .style("fill", "#282828");
 
                                             def_svg.append("text")
-                                                .attr("x",quality_pie_width/2 - 400)
-                                                .attr("y",height2 - 220)
+                                                .attr("x", quality_pie_width / 2 - 400)
+                                                .attr("y", height2 - 220)
                                                 .text("Standard Definition (SD)")
                                                 .style("fill", "#282828")
                                                 .style("font-size", 12)
-                                                .attr("alignment-baseline","middle");
+                                                .attr("alignment-baseline", "middle");
 
                                             def_svg.append("text")
-                                                .attr("x",quality_pie_width/2 - 400)
-                                                .attr("y",height2 - 180)
+                                                .attr("x", quality_pie_width / 2 - 400)
+                                                .attr("y", height2 - 180)
                                                 .text("High Definition (HD)")
                                                 .style("fill", "#282828")
                                                 .style("font-size", 12)
-                                                .attr("alignment-baseline","middle");
-                                            
+                                                .attr("alignment-baseline", "middle");
+
                                             let img_area = def_svg.append("g")
                                                 .attr("transform", "translate(" + def_svg_width / 2 + ", 0)")
                                                 .attr("width", img_width)
