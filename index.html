@@ -56,17 +56,8 @@
             border-radius: 20px;
         }
 
-        /* .svg {
-            margin-left: 15%;
-        } */
-
-        /* Center the SVG */
         .svg_container {
             text-align: center;
-        }
-
-        #kids_chart {
-            text-align: left;
         }
     </style>
 </head>
@@ -106,8 +97,8 @@
         </p>
         <p id="part3">
             <div class="svg_container">
-                <svg id="comparison_img" width="1400" height="400">
-                    <!-- I used this link to get a Gaussian Blur https://www.w3schools.com/graphics/svg_fegaussianblur.asp -->
+                <svg id="quality_chart" width="1400" height="400">
+                    <!-- Used this link to get a Gaussian Blur https://www.w3schools.com/graphics/svg_fegaussianblur.asp -->
                     <defs>
                         <filter id="f1" x="0" y="0">
                             <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
@@ -119,12 +110,16 @@
         </p>
         <p id="part4">
             <div id="word_cloud" class="svg_container"></div>
-            <div class="para">The word cloud displays the 20 most frequently used tags by the trending videos on
-                YouTube. The average number of tags used by each trending video is 18.81. Make note there's a lot of
-                entertainment terms - funny and comedy, also describes a lot of the subjects - how to, challenges, diy,
-                unboxing, vlog, reaction vids, sports, news, and music. Interesting to note how Deontay Wilder and Tyson
-                Fury are on there - this most likely is specific to the day the data was retrieved, not a general trend
-                of the most popular vids on Youtube </div>
+            <div class="para">The average number of tags used by a trending video is 18.81. The word cloud displays the
+                20 most frequently used tags by the trending videos on YouTube. The top 2 tags are funny and comedy,
+                which speak to the general entertainment purpose of YouTube videos. Most of the tags describe the type
+                of video - how to, challenge, diy, vlog, unboxing, reactions - or the subject of the video - sports,
+                news, music, and food.
+                However, because our data came froma single day, there are some unexpected tags like Deontay Wilder and
+                Tyson Fury. These tags came from videos of their boxing rematch so they are most likely specific to the
+                time that our data was retrieved. Another unusual tag was sp:ty=high, which seems to be used in sports
+                videos. Even so, these tags emphasize the prevalence of sports on the trending page.
+            </div>
         </p>
         <script>
             let result = [];
@@ -204,7 +199,6 @@
 
                                             Object.keys(categories).forEach((key, i) => {
                                                 // console.log(key, categories[key]);
-
                                                 svg.append("line")
                                                     .attr("x1", xScale(key))
                                                     .attr("x2", xScale(key))
@@ -215,17 +209,16 @@
                                             });
                                             // console.log(categoryScale.domain());
 
-                                            // Add more code below
-                                            // Part 2 - Made for Kids or not
 
+                                            // Part 2 - Made for Kids or not
                                             // const width2 = d3.select("#kidschart").style("width")
-                                            const width2 = Math.floor(Number(d3.select("#kids_chart").style("width").replace("p", "").replace("x", "")));
+                                            // const width2 = Math.floor(Number(d3.select("#kids_chart").style("width").replace("p", "").replace("x", "")));
                                             const height2 = 400, pie_margin = 20;
+                                            const width2 = 800;
 
                                             const rad = Math.min(width2, height2) / 2 - pie_margin;
 
                                             const svg2 = d3.select("div#kids_chart").append("svg")
-                                                .attr("class", "svg")
                                                 .attr("id", "svg2")
                                                 .attr("width", width2)
                                                 .attr("height", height2);
@@ -266,7 +259,6 @@
                                                 .attr("fill", d => { return (kids_color(d.data.key)) })
                                                 .attr("stroke", "white");
 
-
                                             svg2.append("circle")
                                                 .attr("cx", width2 / 2 - 340)
                                                 .attr("cy", height2 - 220)
@@ -301,7 +293,6 @@
                                             let num_sd = 0;
                                             result.forEach(d => {
                                                 let vid_def = d.contentDetails.definition;
-                                                // console.log(vid_def);
                                                 if (vid_def == "hd") {
                                                     num_hd += 1;
                                                 }
@@ -311,8 +302,7 @@
                                             })
 
                                             var quality_data = { "HD": num_hd, "SD": num_sd };
-
-                                            let def_svg = d3.selectAll("#comparison_img");
+                                            let def_svg = d3.selectAll("#quality_chart");
 
                                             const def_svg_height = def_svg.attr("height");
                                             const def_svg_width = def_svg.attr("width");
@@ -322,7 +312,7 @@
                                             const quality_pie_width = def_svg_width - img_width - pie_margin;
 
                                             let pie_area = def_svg.append("g")
-                                                .attr("transform", "translate(" + ((quality_pie_width / 2) - 50) + "," + height2 / 2 + ")")
+                                                .attr("transform", "translate(" + ((quality_pie_width / 2) + 50) + "," + height2 / 2 + ")")
                                                 .attr("width", quality_pie_width)
                                                 .attr("height", img_height);
 
@@ -349,19 +339,19 @@
                                                 .attr("stroke", "white");
 
                                             def_svg.append("circle")
-                                                .attr("cx", quality_pie_width / 2 - 420)
+                                                .attr("cx", quality_pie_width / 2 - 300)
                                                 .attr("cy", height2 - 220)
                                                 .attr("r", 6)
                                                 .style("fill", "#FF0000")
 
                                             def_svg.append("circle")
-                                                .attr("cx", quality_pie_width / 2 - 420)
+                                                .attr("cx", quality_pie_width / 2 - 300)
                                                 .attr("cy", height2 - 180)
                                                 .attr("r", 6)
                                                 .style("fill", "#282828");
 
                                             def_svg.append("text")
-                                                .attr("x", quality_pie_width / 2 - 400)
+                                                .attr("x", quality_pie_width / 2 - 280)
                                                 .attr("y", height2 - 220)
                                                 .text("Standard Definition (SD)")
                                                 .style("fill", "#282828")
@@ -369,7 +359,7 @@
                                                 .attr("alignment-baseline", "middle");
 
                                             def_svg.append("text")
-                                                .attr("x", quality_pie_width / 2 - 400)
+                                                .attr("x", quality_pie_width / 2 - 280)
                                                 .attr("y", height2 - 180)
                                                 .text("High Definition (HD)")
                                                 .style("fill", "#282828")
@@ -377,74 +367,61 @@
                                                 .attr("alignment-baseline", "middle");
 
                                             let img_area = def_svg.append("g")
-                                                .attr("transform", "translate(" + def_svg_width / 2 + ", 0)")
+                                                .attr("transform", "translate(" + (def_svg_width / 2 + 50) + ", 0)")
                                                 .attr("width", img_width)
                                                 .attr("height", img_height);
 
                                             /** Used this link https://fabiofranchino.com/blog/how-to-load-image-in-svg-with-d3js/ 
                                              *  to learn how to append images using d3 **/
                                             img_area.append("image")
-                                                .attr("xlink:href", "vid_img.png")
+                                                .attr("xlink:href", "vid_img_left.jpg")
                                                 .attr("transform", "translate(0, " + translate_down + ")")
-                                                .attr('width', img_width)
+                                                .attr('width', img_width / 2)
                                                 .attr('height', img_height);
-                                            img_area.append("rect")
-                                                .attr("transform", "translate(0, " + translate_down + ")")
-                                                .attr("x", 24 * img_width / 25)
-                                                .attr("y", 0)
-                                                .attr("width", img_width / 25)
-                                                .attr("height", img_height)
-                                                .style("fill", "white")
-                                                .style("opacity", 0.8);
+                                            img_area.append("image")
+                                                .attr("xlink:href", "vid_img_right.jpg")
+                                                .attr("transform", "translate(" + img_width / 2 + "," + translate_down + ")")
+                                                .attr('width', img_width / 2)
+                                                .attr('height', img_height)
+                                                .style("filter", "url(#f1)");
 
-                                            // img_area.append("image")
-                                            //     .attr("xlink:href", "vid_img_left.jpg")
-                                            //     .attr("transform", "translate(0, " + translate_down + ")")
-                                            //     .attr('width', img_width / 2)
-                                            //     .attr('height', img_height);
-                                            // img_area.append("image")
-                                            //     .attr("xlink:href", "vid_img_right.jpg")
-                                            //     .attr("transform", "translate(" + img_width / 2 + "," + translate_down + ")")
-                                            //     .attr('width', img_width / 2)
-                                            //     .attr('height', img_height)
-                                            //     .style("filter", "url(#f1)");
-
-
-                                            // img_area.append("text")
-                                            //     .attr("transform", "translate(" + img_width / 4 + ", " + (translate_down + img_height / 2) + ")")
-                                            //     .style("text-anchor", "middle")
-                                            //     .style("fill", "#ffee8f")
-                                            //     .style("font-size", 50)
-                                            //     .style("font-family", "Impact")
-                                            //     .style("stroke-width", 1)
-                                            //     .style("stroke", "black")
-                                            //     .text("HD: 193")
-
-                                            // img_area.append("text")
-                                            //     .attr("transform", "translate(" + 3 * img_width / 4 + ", " + (translate_down + img_height / 2) + ")")
-                                            //     .style("text-anchor", "middle")
-                                            //     .style("fill", "#ffee8f")
-                                            //     .style("font-size", 50)
-                                            //     .style("font-family", "Impact")
-                                            //     .style("stroke-width", 1)
-                                            //     .style("stroke", "black")
-                                            //     .text("SD: 7")
-
-                                            // img_area.append("rect")
-                                            //     .attr("transform", "translate(0," + translate_down + ")")
-                                            //     .attr("x", 0)
-                                            //     .attr("y", 0)
-                                            //     .attr("width", img_width / 2)
-                                            //     .attr("height", 10)
-                                            //     .style("fill", "white");
-
-                                            // img_area.append("rect")
-                                            //     .attr("transform", "translate(0, " + translate_down + ")")
-                                            //     .attr("x", img_width / 2)
-                                            //     .attr("y", 0)
-                                            //     .attr("width", img_width / 2)
-                                            //     .attr("height", 263)
-                                            //     .style("fill", "white");
+                                            // Adding annotations to image 
+                                            img_area.append("text")
+                                                .attr("transform", "translate(" + img_width / 4 + ", " + (translate_down + img_height / 2 - 25) + ")")
+                                                .style("text-anchor", "middle")
+                                                .style("fill", "#fff3b0")
+                                                .style("font-size", 50)
+                                                .style("font-family", "Impact")
+                                                .style("stroke-width", 2)
+                                                .style("stroke", "black")
+                                                .text("HD")
+                                            img_area.append("text")
+                                                .attr("transform", "translate(" + 3 * img_width / 4 + ", " + (translate_down + img_height / 2 - 25) + ")")
+                                                .style("text-anchor", "middle")
+                                                .style("fill", "#fff3b0")
+                                                .style("font-size", 50)
+                                                .style("font-family", "Impact")
+                                                .style("stroke-width", 2)
+                                                .style("stroke", "black")
+                                                .text("SD")
+                                            img_area.append("text")
+                                                .attr("transform", "translate(" + img_width / 4 + ", " + (translate_down + img_height / 2 + 25) + ")")
+                                                .style("text-anchor", "middle")
+                                                .style("fill", "#fff3b0")
+                                                .style("font-size", 50)
+                                                .style("font-family", "Impact")
+                                                .style("stroke-width", 2)
+                                                .style("stroke", "black")
+                                                .text("96.5%")
+                                            img_area.append("text")
+                                                .attr("transform", "translate(" + 3 * img_width / 4 + ", " + (translate_down + img_height / 2 + 25) + ")")
+                                                .style("text-anchor", "middle")
+                                                .style("fill", "#fff3b0")
+                                                .style("font-size", 50)
+                                                .style("font-family", "Impact")
+                                                .style("stroke-width", 2)
+                                                .style("stroke", "black")
+                                                .text("3.5%")
 
                                             // Part 4 - Top Tags 
                                             // Getting top 20 tags 
@@ -473,17 +450,12 @@
                                             }, tags);
                                             props.sort(function (p1, p2) { return p2.value - p1.value; });
                                             var topTags = props.slice(0, 20);
-                                            // console.log(topTags);
 
                                             // Word Cloud code 
                                             // const tagScale = d3.scaleOrdinal(d3.schemePaired);
                                             // const tagScale = d3.scaleOrdinal(["#f53325", "#737373", "#000000"]);
                                             // const tagScale = d3.scaleOrdinal(["#e60702", "#ff8b17", "#00b51b", "#ffe500", "#00adb3", "#1e33ba", "#8c2fd4", "#ff6eb6", "#ff6b6b", "#92eb6a"])
                                             const tagScale = d3.scaleOrdinal(["#ff2e2e", "#cab2d6", "#fb9b99", "#00c40a", "#00adc4", "#834bbf", "#d41c98", "#ffb0e5", "#ffab2e", "#ffd712", "#82d1ff"])
-                                            /** https://bl.ocks.org/TaraZhu/120d48c43be68e92da304cb08235d052 **/
-                                            // const tagScale2 = d3.scaleSequential()
-                                            //     .domain([-20, 150])
-                                            //     .interpolator(d3.interpolateGreens);
                                             const wordCloud_width = 700;
                                             const wordCloud_height = 400;
 
@@ -491,7 +463,7 @@
                                                 .attr("width", wordCloud_width)
                                                 .attr("height", wordCloud_height);
 
-                                            /** Construct a cloud layout instance **/
+                                            // Construct a cloud layout instance
                                             var layout = d3.layout.cloud()
                                                 .size([wordCloud_width, wordCloud_height])
                                                 .words(topTags.map(function (d) { return { text: d.key, size: 6 * d.value }; }))
@@ -502,11 +474,10 @@
                                                 .on("end", draw);
                                             layout.start();
 
-                                            /** Take the output of layout and draw the words (fill depends on the word, font-size 
-                                             *  depends on the frequency **/
+                                            // Take the output of layout and draw the words (fill depends on the word, font-size depends on the frequency 
                                             function draw(words) {
                                                 wordCloud_svg.append("g")
-                                                    .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+                                                    .attr("transform", "translate(" + (layout.size()[0] / 2 + 35) + "," + (layout.size()[1] / 2 + 39.5) + ")")
                                                     .selectAll("text")
                                                     .data(words)
                                                     .enter().append("text")
