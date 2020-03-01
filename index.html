@@ -23,7 +23,6 @@
 
         .header {
             background-color: rgb(255, 0, 0, 0.8);
-            /* #FF0000; */
             height: 5rem;
         }
 
@@ -36,6 +35,12 @@
 
         .sub_title {
             font-size: 2rem;
+            text-align: center;
+            color: #282828;
+        }
+
+        .heading {
+            font-size: 1.75rem;
             text-align: center;
             color: #282828;
         }
@@ -76,6 +81,7 @@
             try to find some common ground between popular videos in the United States region using different
             visualizations.
         </div>
+        <div class="heading"> Video category vs Number of videos in the Youtube trending page</div>
         <p id="part1">
             <div id="bar_chart" class="svg_container"></div>
             <div class="para">In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to
@@ -86,6 +92,7 @@
                 to consider
                 form without the meaning of the text influencing the design.</div>
         </p>
+        <div class="heading"> Made for kids vs Not for kids videos </div>
         <p id="part2">
             <div id="kids_chart" class="svg_container"></div>
             <div class="para">Only 1 video out of all 200 trending videos was specifically targeted towards kids. A
@@ -95,6 +102,7 @@
                 about a show called The Steven Universe, which has a sizeable teenager and adult following.
             </div>
         </p>
+        <div class="heading"> Standard Definition vs High Definition videos </div>
         <p id="part3">
             <div class="svg_container">
                 <svg id="quality_chart" width="1400" height="400">
@@ -108,6 +116,7 @@
             </div>
             <div class="para">Standard vs High Definition. Very few standard definition videos (7 out of 200) </div>
         </p>
+        <div class="heading"> Most popular tags used by the videos </div>
         <p id="part4">
             <div id="word_cloud" class="svg_container"></div>
             <div class="para">The average number of tags used by a trending video is 18.81. The word cloud displays the
@@ -125,13 +134,6 @@
         <script>
             d3.json("./all_most_popular_youtube_videos_usa_page.json", d3.autoType)
                 .then((result) => {
-
-                    // annotations add
-                    // sort by length
-                    // colors
-                    // width?
-
-                    // add titles everywhere
 
                     const width = 1000;
                     const height = 500;
