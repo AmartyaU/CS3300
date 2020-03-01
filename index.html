@@ -126,70 +126,106 @@
             d3.json("./all_most_popular_youtube_videos_usa_page.json", d3.autoType)
                 .then((result) => {
 
-                    const width = 800;
-                    const height = 800;
+                    // annotations add
+                    // sort by length
+                    // colors
+                    // width?
+
+                    // add titles everywhere
+
+                    const width = 1000;
+                    const height = 500;
                     const svg = d3.select("#bar_chart").append("svg")
-                        .attr("class", "svg")
                         .attr("width", width)
                         .attr("height", height);
 
-                    const xScale = d3.scaleBand()
-                        .domain([1, 2, 10, 17, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29])
-                        .range([40, width - 20])
-                        .padding(0.1);
-
-                    const yScale = d3.scaleLinear()
-                        .domain([0, 50])
-                        .range([height - 20, 20]);
-
                     const categories = {};
                     result.forEach(d => {
-                        category = d.snippet.categoryId;
+                        category = d.snippet.category;
                         if (categories[category]) {
                             categories[category] += 1;
                         } else {
                             categories[category] = 1;
                         }
                     });
-                    // console.log(categories);
+
+                    console.log(categories);
+
+                    console.log(categories);
+
+                    const xScale = d3.scaleBand()
+                        .domain(Object.keys(categories))
+                        .range([90, width - 20])
+                        .padding(0.1);
+
+                    // console.log(Math.min(...Object.values(categories)));
+                    // console.log(Math.max(...Object.values(categories)));
+                    // max is 46 and min is 1 so using 0 and 50 as domain
+
+                    const yScale = d3.scaleLinear()
+                        .domain([0, 50])
+                        .range([height - 100, 20]);
 
                     const categoryScale = d3.scaleOrdinal(d3.schemeCategory10);
 
+                    // not adding more ticks to not make it too crowded
                     let leftAxis = d3.axisLeft(yScale);
                     svg.append("g")
                         .attr("class", "y axis")
-                        .attr("transform", "translate(20, 0)")
+                        .attr("transform", "translate(60, 0)")
                         .call(leftAxis);
 
+                    svg.append("text")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", 0)
+                        .attr("x", -210)
+                        .attr("dy", "1em")
+                        .style("text-anchor", "middle")
+                        .style("font-weight", "bold")
+                        .style("font-size", "1.2em")
+                        .text("No. of videos in the Youtube trending page");
+
                     let bottomAxis = d3.axisBottom(xScale)
-                        .ticks(3)
                         .tickSize(0);
                     svg.append("g")
                         .attr("class", "x axis")
-                        .attr("transform", "translate(-20, 780)")
-                        .call(bottomAxis);
+                        .attr("transform", "translate(-20, 400)")
+                        .call(bottomAxis)
+                        .selectAll("text")
+                        .attr("y", 15)
+                        .attr("x", -5)
+                        .attr("dy", ".35em")
+                        .attr("font-size", "1.3em")
+                        .attr("transform", "rotate(45)")
+                        .style("text-anchor", "start");
+                        // referenced https://bl.ocks.org/mbostock/4403522
+
+                    svg.append("text")
+                        .attr("transform", "translate(500, 490)")
+                        .attr("transform", "translate(500, 490)")
+                        .style("text-anchor", "middle")
+                        .style("font-weight", "bold")
+                        .style("font-size", "1.2em")
+                        .text("Video Category");
+                        // referenced https://bl.ocks.org/d3noob/23e42c8f67210ac6c678db2cd07a747e
 
                     let leftGridlines = d3.axisLeft(yScale)
                         .tickSize(-width + 40)
                         .tickFormat("");
                     svg.append("g").attr("class", "y gridlines")
-                        .attr("transform", "translate(20, 0)")
+                        .attr("transform", "translate(60, 0)")
                         .call(leftGridlines);
 
                     Object.keys(categories).forEach((key, i) => {
-                        // console.log(key, categories[key]);
-
                         svg.append("line")
                             .attr("x1", xScale(key))
                             .attr("x2", xScale(key))
-                            .attr("y1", height - 20)
+                            .attr("y1", height - 100)
                             .attr("y2", yScale(categories[key]))
                             .style("stroke", categoryScale(key))
-                            .style("stroke-width", 35);
+                            .style("stroke-width", 50);
                     });
-                    // console.log(categoryScale.domain());
 
-                    // Add more code below
                     // Part 2 - Made for Kids or not
 
                     // const width2 = d3.select("#kidschart").style("width")
