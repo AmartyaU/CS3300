@@ -76,8 +76,9 @@
             <h2 class="sub_title">What makes a video trending on <img class="logo" src="./YouTube_Logo.svg" />?</h2>
         </div>
         <div class="para">
-            Have you ever wondered what is common between the videos on the Youtube trending page? We are going to analyze
-            exactly that and try to find some common ground between trending videos in the United States 
+            Have you ever wondered what is common between the videos on the Youtube trending page? We are going to
+            analyze
+            exactly that and try to find some common ground between trending videos in the United States
             region (200 at one time) using different visualizations.
         </div>
         <div class="heading"> Video category vs Number of videos in the Youtube trending page</div>
@@ -481,8 +482,8 @@
                     // Word Cloud code 
                     // const tagScale = d3.scaleOrdinal(["#f53325", "#737373", "#000000"]); 
                     const tagScale = d3.scaleOrdinal(["#ff2e2e", "#cab2d6", "#fb9b99", "#00c40a", "#00adc4", "#834bbf", "#d41c98", "#ffb0e5", "#ffab2e", "#ffd712", "#82d1ff"])
-                    const wordCloud_width = 700;
-                    const wordCloud_height = 400;
+                    const wordCloud_width = 650;
+                    const wordCloud_height = 325;
 
                     let wordCloud_svg = d3.select("#word_cloud").append("svg")
                         .attr("width", wordCloud_width)
@@ -491,7 +492,7 @@
                     // Referenced https://www.d3-graph-gallery.com/graph/wordcloud_size.html to create word cloud 
                     // Construct a cloud layout instance
                     var layout = d3.layout.cloud()
-                        .size([wordCloud_width, wordCloud_height])
+                        .size([wordCloud_width + 50, wordCloud_height + 75])
                         .words(topTags.map(function (d) { return { text: d.key, size: 6 * d.value }; }))
                         .padding(5)                                         //space between words
                         .rotate(0)
