@@ -153,13 +153,13 @@
 
                     console.log(categories);
 
-                    // referenced stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys
+                    // Referenced stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys
                     // convert object into array of objects
                     let categories_array = Object.keys(categories).map(function (key) {
                         return { "category": key, "videos_number": categories[key] };
                     }, categories);
                     // sort array according to videos_number in ascending order
-                    categories_array.sort(function(a, b) { return a.videos_number - b.videos_number; });
+                    categories_array.sort(function (a, b) { return a.videos_number - b.videos_number; });
                     // get array of categories in ascending order
                     ordered_categories = categories_array.map(function (elem) {
                         return elem["category"];
@@ -182,7 +182,7 @@
 
                     const categoryScale = d3.scaleOrdinal()
                         .range(["f7b6d2", "c49c94", "c5b0d5", "9edae5", "7f7f7f",
-                            "ff7f0e", "bcbd22", "9467bd", "8c564b", "e377c2", 
+                            "ff7f0e", "bcbd22", "9467bd", "8c564b", "e377c2",
                             "ff9896", "17becf", "1f77b4", "2ca02c",
                         ]);
 
@@ -481,9 +481,7 @@
                     var topTags = props.slice(0, 20);
 
                     // Word Cloud code 
-                    // const tagScale = d3.scaleOrdinal(d3.schemePaired);
-                    // const tagScale = d3.scaleOrdinal(["#f53325", "#737373", "#000000"]);
-                    // const tagScale = d3.scaleOrdinal(["#e60702", "#ff8b17", "#00b51b", "#ffe500", "#00adb3", "#1e33ba", "#8c2fd4", "#ff6eb6", "#ff6b6b", "#92eb6a"])
+                    // const tagScale = d3.scaleOrdinal(["#f53325", "#737373", "#000000"]); 
                     const tagScale = d3.scaleOrdinal(["#ff2e2e", "#cab2d6", "#fb9b99", "#00c40a", "#00adc4", "#834bbf", "#d41c98", "#ffb0e5", "#ffab2e", "#ffd712", "#82d1ff"])
                     const wordCloud_width = 700;
                     const wordCloud_height = 400;
