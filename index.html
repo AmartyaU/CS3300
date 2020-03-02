@@ -4,8 +4,7 @@
     <title>INFO 3300 - Project 1</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="d3.layout.cloud.js"></script>
-    <!-- Fonts from https://fonts.googleapis.com/css?family=Oswald|Roboto:300&display=swap -->
-    <link href="./fonts.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Oswald|Roboto:300&display=swap" rel="stylesheet">
     <style>
         body,
         html {
@@ -160,11 +159,11 @@
                         }
                     });
 
-                    // Referenced stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys
+                    // modified version of stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys
                     // convert object into array of objects
-                    let categories_array = Object.keys(categories).map(function (key) {
+                    let categories_array = Object.keys(categories).map( (key) => {
                         return { "category": key, "videos_number": categories[key] };
-                    }, categories);
+                    }, []);
                     // sort array according to videos_number in ascending order
                     categories_array.sort(function (a, b) { return a.videos_number - b.videos_number; });
                     // get array of categories in ascending order
@@ -182,7 +181,7 @@
                     // max is 46 and min is 1 so using 0 and 50 as domain
 
                     const yScale = d3.scaleLinear()
-                        .domain([0, 50])
+                        .domain([0, Math.max(...Object.values(categories)) + 4])
                         .range([height - 150, 20]);
 
                     const categoryScale = d3.scaleOrdinal()
