@@ -129,16 +129,13 @@
         <div class="heading"> What #tag do videos use? </div>
         <p id="part4">
             <div id="word_cloud" class="svg_container"></div>
-            <div class="para">The average number of tags used by a trending video is 18.81. The word cloud displays the
-                20 most frequently used tags by the trending videos. The top 2 tags are funny and comedy,
+            <div class="para">The average number of tags used by a trending video is 18.81. The word cloud above
+                displays the 20 most frequently used tags. The top 2 tags are funny and comedy,
                 which speak to the general entertainment purpose of YouTube videos. Most of the tags describe the type
-                of video - how to, challenge, diy, vlog, unboxing, reactions - or the subject of the video - sports,
-                news, music, and food.
-                However, because our data came from a single day, there are some unusual tags like Deontay Wilder and
+                or subject of the video, and they line up with the common categories found earlier.
+                Because our data came from a single day, there are also some unexpected tags like Deontay Wilder and
                 Tyson Fury. These tags came from videos of their boxing rematch so they are most likely specific to the
-                time that our data was retrieved. Another unusual tag was sp:ty=high, which seems to be used in sports
-                videos. Despite these unexpected tags, they still emphasize the prevalence of sports on the trending
-                page.
+                time that our data was retrieved.
             </div>
         </p>
         <script>
@@ -318,7 +315,7 @@
                         .attr("y", height2 - 220)
                         .text("Made for Kids")
                         .style("fill", "#282828")
-                        .style("font-size", 15)
+                        .style("font-size", 18)
                         .attr("alignment-baseline", "middle");
 
                     svg2.append("text")
@@ -326,7 +323,7 @@
                         .attr("y", height2 - 180)
                         .text("Not for Kids")
                         .style("fill", "#282828")
-                        .style("font-size", 15)
+                        .style("font-size", 18)
                         .attr("alignment-baseline", "middle");
 
 
@@ -381,31 +378,31 @@
                         .attr("stroke", "white");
 
                     def_svg.append("circle")
-                        .attr("cx", quality_pie_width / 2 - 310)
+                        .attr("cx", quality_pie_width / 2 - 320)
                         .attr("cy", height2 - 220)
                         .attr("r", 6)
                         .style("fill", "#FF0000")
 
                     def_svg.append("circle")
-                        .attr("cx", quality_pie_width / 2 - 310)
+                        .attr("cx", quality_pie_width / 2 - 320)
                         .attr("cy", height2 - 180)
                         .attr("r", 6)
                         .style("fill", "#282828");
 
                     def_svg.append("text")
-                        .attr("x", quality_pie_width / 2 - 300)
+                        .attr("x", quality_pie_width / 2 - 310)
                         .attr("y", height2 - 220)
                         .text("Standard Definition (SD)")
                         .style("fill", "#282828")
-                        .style("font-size", 15)
+                        .style("font-size", 18)
                         .attr("alignment-baseline", "middle");
 
                     def_svg.append("text")
-                        .attr("x", quality_pie_width / 2 - 300)
+                        .attr("x", quality_pie_width / 2 - 310)
                         .attr("y", height2 - 180)
                         .text("High Definition (HD)")
                         .style("fill", "#282828")
-                        .style("font-size", 15)
+                        .style("font-size", 18)
                         .attr("alignment-baseline", "middle");
 
                     let img_area = def_svg.append("g")
