@@ -1,4 +1,4 @@
-Queried from Youtube's API on Sunday Feb 23, 9:35PM (Each page consists of 50 results for a total of 200 results). Youtube only has 200 videos on the trending page from the last 7 days (most recent vidoes) so that will be our dataset. We will be analyzing the trending videos from the United States region for relevance.
+Queried from Youtube's API on Sunday Feb 23, 9:35PM (Each page consists of 50 results for a total of 200 results). Youtube only has 200 videos on the trending page from the last 7 days (most recent videos) so that will be our dataset. We will be analyzing the trending videos from the United States region for similarities.
 
 # cURL Request Made for Page 1
 curl\

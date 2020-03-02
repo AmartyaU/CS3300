@@ -151,6 +151,7 @@
                         .attr("width", width)
                         .attr("height", height);
 
+                    // get number of videos for each category in a dict
                     const categories = {};
                     result.forEach(d => {
                         category = d.snippet.category;
@@ -160,8 +161,6 @@
                             categories[category] = 1;
                         }
                     });
-
-                    console.log(categories);
 
                     // Referenced stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys
                     // convert object into array of objects
@@ -174,8 +173,6 @@
                     ordered_categories = categories_array.map(function (elem) {
                         return elem["category"];
                     }, []);
-
-                    console.log(ordered_categories);
 
                     const xScale = d3.scaleBand()
                         .domain(ordered_categories)
@@ -196,8 +193,10 @@
                             "ff9896", "17becf", "1f77b4", "2ca02c",
                         ]);
 
-                    // not adding more ticks to not make it too crowded
+                    // add axes, labels, and gridlines
+                    
                     let leftAxis = d3.axisLeft(yScale);
+                    // not adding more ticks to not make it too crowded
                     svg.append("g")
                         .attr("class", "y axis")
                         .attr("transform", "translate(60, 0)")
@@ -245,6 +244,7 @@
                         .attr("transform", "translate(60, 0)")
                         .call(leftGridlines);
 
+                    // add rectangles
                     ordered_categories.forEach((category, i) => {
                         svg.append("line")
                             .attr("x1", xScale(category))
@@ -482,7 +482,6 @@
                             })
                         }
                     })
-                    // console.log(tagCount / 200);
 
                     // Referenced https://stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys to get top 20 tags 
                     var props = Object.keys(tags).map(function (key) {
