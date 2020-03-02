@@ -106,7 +106,7 @@
         <p id="part3">
             <div class="svg_container">
                 <svg id="quality_chart" width="1400" height="400">
-                    <!-- Used this link to get a Gaussian Blur https://www.w3schools.com/graphics/svg_fegaussianblur.asp -->
+                    <!-- Referenced https://www.w3schools.com/graphics/svg_fegaussianblur.asp to get Gaussian Blur -->
                     <defs>
                         <filter id="f1" x="0" y="0">
                             <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
@@ -200,7 +200,7 @@
                         .attr("font-size", "1.3em")
                         .attr("transform", "rotate(45)")
                         .style("text-anchor", "start");
-                        // referenced https://bl.ocks.org/mbostock/4403522
+                    // Referenced https://bl.ocks.org/mbostock/4403522
 
                     svg.append("text")
                         .attr("transform", "translate(500, 490)")
@@ -209,7 +209,7 @@
                         .style("font-weight", "bold")
                         .style("font-size", "1.2em")
                         .text("Video Category");
-                        // referenced https://bl.ocks.org/d3noob/23e42c8f67210ac6c678db2cd07a747e
+                    // Referenced https://bl.ocks.org/d3noob/23e42c8f67210ac6c678db2cd07a747e
 
                     let leftGridlines = d3.axisLeft(yScale)
                         .tickSize(-width + 40)
@@ -229,11 +229,7 @@
                     });
 
                     // Part 2 - Made for Kids or not
-
-                    // const width2 = d3.select("#kidschart").style("width")
-                    // const width2 = Math.floor(Number(d3.select("#kids_chart").style("width").replace("p", "").replace("x", "")));
-                    const height2 = 400, pie_margin = 20;
-                    const width2 = 800;
+                    const width2 = 800, height2 = 400, pie_margin = 20;
 
                     const rad = Math.min(width2, height2) / 2 - pie_margin;
 
@@ -390,8 +386,7 @@
                         .attr("width", img_width)
                         .attr("height", img_height);
 
-                    /** Used this link https://fabiofranchino.com/blog/how-to-load-image-in-svg-with-d3js/ 
-                     *  to learn how to append images using d3 **/
+                    // Referenced https://fabiofranchino.com/blog/how-to-load-image-in-svg-with-d3js/ to append images using d3
                     img_area.append("image")
                         .attr("xlink:href", "vid_img_left.jpg")
                         .attr("transform", "translate(0, " + translate_down + ")")
@@ -462,8 +457,7 @@
                     })
                     // console.log(tagCount / 200);
 
-                    /** Code for retrieving the top 20 tags was written with the guidance of this website
-                    https://stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys **/
+                    // Referenced https://stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys to get top 20 tags 
                     var props = Object.keys(tags).map(function (key) {
                         return { key: key, value: this[key] };
                     }, tags);
@@ -482,6 +476,7 @@
                         .attr("width", wordCloud_width)
                         .attr("height", wordCloud_height);
 
+                    // Referenced https://www.d3-graph-gallery.com/graph/wordcloud_size.html to create word cloud 
                     // Construct a cloud layout instance
                     var layout = d3.layout.cloud()
                         .size([wordCloud_width, wordCloud_height])
@@ -496,7 +491,7 @@
                     // Take the output of layout and draw the words (fill depends on the word, font-size depends on the frequency 
                     function draw(words) {
                         wordCloud_svg.append("g")
-                            .attr("transform", "translate(" + (layout.size()[0] / 2 + 35) + "," + (layout.size()[1] / 2 + 39.5) + ")")
+                            .attr("transform", "translate(" + (layout.size()[0] / 2) + "," + (layout.size()[1] / 2) + ")")
                             .selectAll("text")
                             .data(words)
                             .enter().append("text")
