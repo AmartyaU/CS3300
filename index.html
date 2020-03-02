@@ -277,13 +277,14 @@
                         }
                     })
 
+                    // Referenced  https://www.d3-graph-gallery.com/pie to make pie charts.
                     var data = { "Made for Kids": kid_friendly, "Not for Kids": not_kid_targeted };
 
                     var kids_color = d3.scaleOrdinal()
                         .domain(data)
                         .range(["#FF0000", "#282828"]);
                     var kids_pie = d3.pie()
-                        .value(d => { return d.value; });
+                        .value(d => {return d.value;});
 
                     var pie_data = kids_pie(d3.entries(data));
 
