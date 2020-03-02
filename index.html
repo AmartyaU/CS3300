@@ -153,10 +153,22 @@
 
                     console.log(categories);
 
-                    console.log(categories);
+                    // referenced stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys
+                    // convert object into array of objects
+                    let categories_array = Object.keys(categories).map(function (key) {
+                        return { "category": key, "videos_number": categories[key] };
+                    }, categories);
+                    // sort array according to videos_number in ascending order
+                    categories_array.sort(function(a, b) { return a.videos_number - b.videos_number; });
+                    // get array of categories in ascending order
+                    ordered_categories = categories_array.map(function (elem) {
+                        return elem["category"];
+                    }, []);
+
+                    console.log(ordered_categories);
 
                     const xScale = d3.scaleBand()
-                        .domain(Object.keys(categories))
+                        .domain(ordered_categories)
                         .range([90, width - 20])
                         .padding(0.1);
 
@@ -168,7 +180,11 @@
                         .domain([0, 50])
                         .range([height - 100, 20]);
 
-                    const categoryScale = d3.scaleOrdinal(d3.schemeCategory10);
+                    const categoryScale = d3.scaleOrdinal()
+                        .range(["f7b6d2", "c49c94", "c5b0d5", "9edae5", "7f7f7f",
+                            "ff7f0e", "bcbd22", "9467bd", "8c564b", "e377c2", 
+                            "ff9896", "17becf", "1f77b4", "2ca02c",
+                        ]);
 
                     // not adding more ticks to not make it too crowded
                     let leftAxis = d3.axisLeft(yScale);
@@ -204,7 +220,7 @@
 
                     svg.append("text")
                         .attr("transform", "translate(500, 490)")
-                        .attr("transform", "translate(500, 490)")
+                        .attr("transform", "translate(450, 495)")
                         .style("text-anchor", "middle")
                         .style("font-weight", "bold")
                         .style("font-size", "1.2em")
@@ -218,13 +234,13 @@
                         .attr("transform", "translate(60, 0)")
                         .call(leftGridlines);
 
-                    Object.keys(categories).forEach((key, i) => {
+                    ordered_categories.forEach((category, i) => {
                         svg.append("line")
-                            .attr("x1", xScale(key))
-                            .attr("x2", xScale(key))
+                            .attr("x1", xScale(category))
+                            .attr("x2", xScale(category))
                             .attr("y1", height - 100)
-                            .attr("y2", yScale(categories[key]))
-                            .style("stroke", categoryScale(key))
+                            .attr("y2", yScale(categories[category]))
+                            .style("stroke", categoryScale(category))
                             .style("stroke-width", 50);
                     });
 
