@@ -85,6 +85,7 @@
         </div>
         <div class="sub_header">
             <h2 class="sub_title">What makes a video trending on <img class="logo" src="./YouTube_Logo.svg" />?</h2>
+            <!-- Source: https://commons.wikimedia.org/wiki/File:YouTube_Logo_2017.svg -->
         </div>
         <div class="para">
             Have you ever wondered what is common between the videos on the Youtube trending page? We are going to
@@ -159,11 +160,11 @@
                         }
                     });
 
-                    // Referenced stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys
+                    // modified version of stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys
                     // convert object into array of objects
-                    let categories_array = Object.keys(categories).map(function (key) {
+                    let categories_array = Object.keys(categories).map( (key) => {
                         return { "category": key, "videos_number": categories[key] };
-                    }, categories);
+                    }, []);
                     // sort array according to videos_number in ascending order
                     categories_array.sort(function (a, b) { return a.videos_number - b.videos_number; });
                     // get array of categories in ascending order
@@ -181,7 +182,7 @@
                     // max is 46 and min is 1 so using 0 and 50 as domain
 
                     const yScale = d3.scaleLinear()
-                        .domain([0, 50])
+                        .domain([0, Math.max(...Object.values(categories)) + 4])
                         .range([height - 150, 20]);
 
                     const categoryScale = d3.scaleOrdinal()
@@ -276,13 +277,14 @@
                         }
                     })
 
+                    // Referenced  https://www.d3-graph-gallery.com/pie to make pie charts.
                     var data = { "Made for Kids": kid_friendly, "Not for Kids": not_kid_targeted };
 
                     var kids_color = d3.scaleOrdinal()
                         .domain(data)
                         .range(["#FF0000", "#282828"]);
                     var kids_pie = d3.pie()
-                        .value(d => { return d.value; });
+                        .value(d => {return d.value;});
 
                     var pie_data = kids_pie(d3.entries(data));
 
