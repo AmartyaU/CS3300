@@ -4,13 +4,13 @@
     <title>INFO 3300 - Project 1</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="d3.layout.cloud.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Noto+Serif&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Oswald|Roboto:300&display=swap" rel="stylesheet">
     <style>
         body,
         html {
             margin: 0;
             padding: 0;
-            font-family: 'Noto Serif';
+            font-family: 'Roboto';
         }
 
         .gridlines line {
@@ -27,22 +27,25 @@
         }
 
         .title {
-            font-size: 2.5rem;
+            font-size: 3rem;
             color: white;
             text-align: center;
-            padding-top: 1rem;
+            /* padding-top: 0.5rem; */
+            font-family: 'Oswald';
         }
 
         .sub_title {
-            font-size: 2rem;
+            font-size: 2.5rem;
             text-align: center;
             color: #282828;
+            font-family: 'Oswald';
         }
 
         .heading {
-            font-size: 1.75rem;
+            font-size: 2rem;
             text-align: center;
             color: #282828;
+            font-family: 'Oswald';
         }
 
         .logo {
@@ -64,13 +67,21 @@
         .svg_container {
             text-align: center;
         }
+
+        .bar_labels {
+            font-family: 'Roboto';
+        }
+
+        .axis {
+            font-family: 'Roboto';
+        }
     </style>
 </head>
 
 <body>
     <div class="project1">
         <div class="header">
-            <h1 class="title">Project 1</h1>
+            <h1 class="title">A Look Into YouTube's Trending Section</h1>
         </div>
         <div class="sub_header">
             <h2 class="sub_title">What makes a video trending on <img class="logo" src="./YouTube_Logo.svg" />?</h2>
@@ -81,7 +92,7 @@
             exactly that and try to find some common ground between trending videos in the United States
             region (200 at one time) using different visualizations.
         </div>
-        <div class="heading"> Video category vs Number of videos in the Youtube trending page</div>
+        <div class="heading"> What categories make up the trending page? </div>
         <p id="part1">
             <div id="bar_chart" class="svg_container"></div>
             <div class="para"> The top 3 trending categories are Entertainment, Sports, and Music
@@ -90,7 +101,7 @@
                 People & Blogs category.
             </div>
         </p>
-        <div class="heading"> Made for kids vs Not for kids videos </div>
+        <div class="heading"> Are the videos made for kids? </div>
         <p id="part2">
             <div id="kids_chart" class="svg_container"></div>
             <div class="para">Only 1 video out of all 200 trending videos was specifically targeted towards kids. A
@@ -100,7 +111,7 @@
                 about a show called The Steven Universe, which has a sizeable teenager and adult following.
             </div>
         </p>
-        <div class="heading"> Standard Definition vs High Definition videos </div>
+        <div class="heading"> What is the quality of the videos? </div>
         <p id="part3">
             <div class="svg_container">
                 <svg id="quality_chart" width="1400" height="400">
@@ -112,14 +123,14 @@
                     </defs>
                 </svg>
             </div>
-            <div class="para"> Very few standard definition videos (7 out of 200) which makes sense, because people
-                prefer videos with a better quality. </div>
+            <div class="para">There are very few standard definition videos (7 out of 200) which makes sense, because
+                people prefer videos with a better quality. </div>
         </p>
-        <div class="heading"> Most popular tags used by the videos </div>
+        <div class="heading"> What #tag do videos use? </div>
         <p id="part4">
             <div id="word_cloud" class="svg_container"></div>
             <div class="para">The average number of tags used by a trending video is 18.81. The word cloud displays the
-                20 most frequently used tags by the trending videos on YouTube. The top 2 tags are funny and comedy,
+                20 most frequently used tags by the trending videos. The top 2 tags are funny and comedy,
                 which speak to the general entertainment purpose of YouTube videos. Most of the tags describe the type
                 of video - how to, challenge, diy, vlog, unboxing, reactions - or the subject of the video - sports,
                 news, music, and food.
@@ -135,7 +146,7 @@
                 .then((result) => {
 
                     const width = 1000;
-                    const height = 500;
+                    const height = 550;
                     const svg = d3.select("#bar_chart").append("svg")
                         .attr("width", width)
                         .attr("height", height);
@@ -177,7 +188,7 @@
 
                     const yScale = d3.scaleLinear()
                         .domain([0, 50])
-                        .range([height - 100, 20]);
+                        .range([height - 150, 20]);
 
                     const categoryScale = d3.scaleOrdinal()
                         .range(["f7b6d2", "c49c94", "c5b0d5", "9edae5", "7f7f7f",
@@ -200,7 +211,7 @@
                         .style("text-anchor", "middle")
                         .style("font-weight", "bold")
                         .style("font-size", "1.2em")
-                        .text("No. of videos in the Youtube trending page");
+                        .text("No. of videos in YouTube Trending");
 
                     let bottomAxis = d3.axisBottom(xScale)
                         .tickSize(0);
@@ -214,12 +225,13 @@
                         .attr("dy", ".35em")
                         .attr("font-size", "1.3em")
                         .attr("transform", "rotate(45)")
+                        .attr("class", "bar_labels")
                         .style("text-anchor", "start");
                     // Referenced https://bl.ocks.org/mbostock/4403522
 
                     svg.append("text")
-                        .attr("transform", "translate(500, 490)")
-                        .attr("transform", "translate(450, 495)")
+                        .attr("transform", "translate(500, 525)")
+                        // .attr("transform", "translate(450, 495)")
                         .style("text-anchor", "middle")
                         .style("font-weight", "bold")
                         .style("font-size", "1.2em")
@@ -237,7 +249,7 @@
                         svg.append("line")
                             .attr("x1", xScale(category))
                             .attr("x2", xScale(category))
-                            .attr("y1", height - 100)
+                            .attr("y1", height - 150)
                             .attr("y2", yScale(categories[category]))
                             .style("stroke", categoryScale(category))
                             .style("stroke-width", 50);
@@ -302,19 +314,19 @@
                         .style("fill", "#282828");
 
                     svg2.append("text")
-                        .attr("x", width2 / 2 - 320)
+                        .attr("x", width2 / 2 - 330)
                         .attr("y", height2 - 220)
                         .text("Made for Kids")
                         .style("fill", "#282828")
-                        .style("font-size", 12)
+                        .style("font-size", 15)
                         .attr("alignment-baseline", "middle");
 
                     svg2.append("text")
-                        .attr("x", width2 / 2 - 320)
+                        .attr("x", width2 / 2 - 330)
                         .attr("y", height2 - 180)
                         .text("Not for Kids")
                         .style("fill", "#282828")
-                        .style("font-size", 12)
+                        .style("font-size", 15)
                         .attr("alignment-baseline", "middle");
 
 
@@ -342,7 +354,7 @@
                     const quality_pie_width = def_svg_width - img_width - pie_margin;
 
                     let pie_area = def_svg.append("g")
-                        .attr("transform", "translate(" + ((quality_pie_width / 2) + 50) + "," + height2 / 2 + ")")
+                        .attr("transform", "translate(" + ((quality_pie_width / 2) + 70) + "," + height2 / 2 + ")")
                         .attr("width", quality_pie_width)
                         .attr("height", img_height);
 
@@ -369,31 +381,31 @@
                         .attr("stroke", "white");
 
                     def_svg.append("circle")
-                        .attr("cx", quality_pie_width / 2 - 300)
+                        .attr("cx", quality_pie_width / 2 - 310)
                         .attr("cy", height2 - 220)
                         .attr("r", 6)
                         .style("fill", "#FF0000")
 
                     def_svg.append("circle")
-                        .attr("cx", quality_pie_width / 2 - 300)
+                        .attr("cx", quality_pie_width / 2 - 310)
                         .attr("cy", height2 - 180)
                         .attr("r", 6)
                         .style("fill", "#282828");
 
                     def_svg.append("text")
-                        .attr("x", quality_pie_width / 2 - 280)
+                        .attr("x", quality_pie_width / 2 - 300)
                         .attr("y", height2 - 220)
                         .text("Standard Definition (SD)")
                         .style("fill", "#282828")
-                        .style("font-size", 12)
+                        .style("font-size", 15)
                         .attr("alignment-baseline", "middle");
 
                     def_svg.append("text")
-                        .attr("x", quality_pie_width / 2 - 280)
+                        .attr("x", quality_pie_width / 2 - 300)
                         .attr("y", height2 - 180)
                         .text("High Definition (HD)")
                         .style("fill", "#282828")
-                        .style("font-size", 12)
+                        .style("font-size", 15)
                         .attr("alignment-baseline", "middle");
 
                     let img_area = def_svg.append("g")
