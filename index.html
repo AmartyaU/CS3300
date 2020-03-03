@@ -4,7 +4,6 @@
     <title>INFO 3300 - Project 1</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="d3.layout.cloud.js"></script>
-    <!-- Fonts from https://fonts.googleapis.com/css?family=Oswald|Roboto:300&display=swap -->
     <link href="./fonts.css" rel="stylesheet">
     <style>
         body,
@@ -76,6 +75,17 @@
         .axis {
             font-family: 'Roboto';
         }
+
+        .footer {
+            text-align: center;
+            font-size: 0.75rem;
+        }
+
+        .footer div {
+            width: 50%;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -86,6 +96,7 @@
         </div>
         <div class="sub_header">
             <h2 class="sub_title">What makes a video trending on <img class="logo" src="./YouTube_Logo.svg" />?</h2>
+            <!-- Source: https://commons.wikimedia.org/wiki/File:YouTube_Logo_2017.svg -->
         </div>
         <div class="para">
             Have you ever wondered what's common between the videos on the YouTube trending page? We are going to
@@ -115,10 +126,10 @@
         <div class="heading"> What is the quality of the videos? </div>
         <p id="part3">
             <div class="svg_container">
-                <svg id="quality_chart" width="1400" height="400">
+                <svg id="quality_chart" width="1250" height="400">
                     <!-- Referenced https://www.w3schools.com/graphics/svg_fegaussianblur.asp to get Gaussian Blur -->
                     <defs>
-                        <filter id="f1" x="0" y="0">
+                        <filter id="blur" x="0" y="0">
                             <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
                         </filter>
                     </defs>
@@ -139,6 +150,12 @@
                 time that our data was retrieved.
             </div>
         </p>
+        <div class="footer">
+            <!-- Referenced https://stackoverflow.com/questions/1964297/split-div-into-2-columns-using-css to divide div in half-->
+            <div style="width:50%; float:left">Data Source: YouTube API</div>
+            <div style="width:50%; float:right">YouTube Icon:
+                https://commons.wikimedia.org/wiki/File:YouTube_Logo_2017.svg</div>
+        </div>
         <script>
             d3.json("./all_most_popular_youtube_videos_usa_page.json", d3.autoType)
                 .then((result) => {
@@ -162,7 +179,7 @@
 
                     // modified version of stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys
                     // convert object into array of objects
-                    let categories_array = Object.keys(categories).map( (key) => {
+                    let categories_array = Object.keys(categories).map((key) => {
                         return { "category": key, "videos_number": categories[key] };
                     }, []);
                     // sort array according to videos_number in ascending order
@@ -186,9 +203,9 @@
                         .range([height - 150, 20]);
 
                     const categoryScale = d3.scaleOrdinal()
-                        .range(["f7b6d2", "c49c94", "c5b0d5", "9edae5", "7f7f7f",
+                        .range(["c49c94", "c5b0d5", "9edae5", "7f7f7f",
                             "ff7f0e", "bcbd22", "9467bd", "8c564b", "e377c2",
-                            "ff9896", "17becf", "1f77b4", "2ca02c",
+                            "ff9896", "2ca02c", "17becf", "1f77b4", "ff2e2e"
                         ]);
 
                     // add axes, labels, and gridlines
@@ -286,7 +303,7 @@
                         .domain(data)
                         .range(["#FF0000", "#282828"]);
                     var kids_pie = d3.pie()
-                        .value(d => {return d.value;});
+                        .value(d => { return d.value; });
 
                     var pie_data = kids_pie(d3.entries(data));
 
@@ -352,13 +369,13 @@
 
                     const def_svg_height = def_svg.attr("height");
                     const def_svg_width = def_svg.attr("width");
-                    const img_width = 483;
-                    const img_height = 272.5;
+                    const img_width = 402.5;
+                    const img_height = 227;
                     const translate_down = (def_svg_height - img_height) / 2;
                     const quality_pie_width = def_svg_width - img_width - pie_margin;
 
                     let pie_area = def_svg.append("g")
-                        .attr("transform", "translate(" + ((quality_pie_width / 2) + 70) + "," + height2 / 2 + ")")
+                        .attr("transform", "translate(" + ((quality_pie_width / 2) + 40) + "," + height2 / 2 + ")")
                         .attr("width", quality_pie_width)
                         .attr("height", img_height);
 
@@ -386,19 +403,19 @@
 
                     // Legend Creation
                     def_svg.append("circle")
-                        .attr("cx", quality_pie_width / 2 - 320)
+                        .attr("cx", quality_pie_width / 2 - 350)
                         .attr("cy", height2 - 220)
                         .attr("r", 6)
                         .style("fill", "#FF0000")
 
                     def_svg.append("circle")
-                        .attr("cx", quality_pie_width / 2 - 320)
+                        .attr("cx", quality_pie_width / 2 - 350)
                         .attr("cy", height2 - 180)
                         .attr("r", 6)
                         .style("fill", "#282828");
 
                     def_svg.append("text")
-                        .attr("x", quality_pie_width / 2 - 310)
+                        .attr("x", quality_pie_width / 2 - 340)
                         .attr("y", height2 - 220)
                         .text("Standard Definition (SD)")
                         .style("fill", "#282828")
@@ -406,7 +423,7 @@
                         .attr("alignment-baseline", "middle");
 
                     def_svg.append("text")
-                        .attr("x", quality_pie_width / 2 - 310)
+                        .attr("x", quality_pie_width / 2 - 340)
                         .attr("y", height2 - 180)
                         .text("High Definition (HD)")
                         .style("fill", "#282828")
@@ -414,11 +431,12 @@
                         .attr("alignment-baseline", "middle");
 
                     let img_area = def_svg.append("g")
-                        .attr("transform", "translate(" + (def_svg_width / 2 + 50) + ", 0)")
+                        .attr("transform", "translate(" + (def_svg_width / 2 + 110) + ", 0)")
                         .attr("width", img_width)
                         .attr("height", img_height);
 
                     // Referenced https://fabiofranchino.com/blog/how-to-load-image-in-svg-with-d3js/ to append images using d3
+                    // Image sourced from https://www.youtube.com/watch?v=-BjZmE2gtdo
                     img_area.append("image")
                         .attr("xlink:href", "vid_img_left.jpg")
                         .attr("transform", "translate(0, " + translate_down + ")")
@@ -429,7 +447,7 @@
                         .attr("transform", "translate(" + img_width / 2 + "," + translate_down + ")")
                         .attr('width', img_width / 2)
                         .attr('height', img_height)
-                        .style("filter", "url(#f1)");
+                        .style("filter", "url(#blur)");
 
                     // Adding annotations to image 
                     img_area.append("text")
@@ -468,6 +486,11 @@
                         .style("stroke-width", 2)
                         .style("stroke", "black")
                         .text("3.5%")
+                    img_area.append("text")
+                        .attr("transform", "translate(" + img_width / 2 + "," + (translate_down + img_height + 10) + ")")
+                        .style("font-size", 8)
+                        .style("text-anchor", "middle")
+                        .text("Source: https://www.youtube.com/watch?v=-BjZmE2gtdo");
 
                     // Part 4 - Top Tags 
                     // Getting top 20 tags 
@@ -489,14 +512,13 @@
                     })
 
                     // Referenced https://stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys to get top 20 tags 
-                    var props = Object.keys(tags).map(function (key) {
-                        return { key: key, value: this[key] };
+                    var map_tags = Object.keys(tags).map(function (key) {
+                        return { "tag": key, "frequency": tags[key] };
                     }, tags);
-                    props.sort(function (p1, p2) { return p2.value - p1.value; });
-                    var topTags = props.slice(0, 20);
+                    map_tags.sort((tag1, tag2) => { return tag2.frequency - tag1.frequency; });
+                    var topTags = map_tags.slice(0, 20);
 
                     // Word Cloud code 
-                    // const tagScale = d3.scaleOrdinal(["#f53325", "#737373", "#000000"]); 
                     const tagScale = d3.scaleOrdinal(["#ff2e2e", "#cab2d6", "#fb9b99", "#00c40a", "#00adc4", "#834bbf", "#d41c98", "#ffb0e5", "#ffab2e", "#ffd712", "#82d1ff"])
                     const wordCloud_width = 650;
                     const wordCloud_height = 325;
@@ -509,29 +531,27 @@
                     // Construct a cloud layout instance
                     var layout = d3.layout.cloud()
                         .size([wordCloud_width + 50, wordCloud_height + 75])
-                        .words(topTags.map(function (d) { return { text: d.key, size: 6 * d.value }; }))
+                        .words(topTags.map(d => { return { text: d.tag, size: 6 * d.frequency }; }))
                         .padding(5)                                         //space between words
                         .rotate(0)
                         .fontSize(function (d) { return d.size; })          // font size of words
                         .random(function (d) { return 0.4; })              // taken from https://stackoverflow.com/questions/42941368/keep-d3-cloud-consistent-between-refreshes-with-a-seed-value to prevent it from changing when refreshed
-                        .on("end", draw);
+                        .on("end", add_words);
                     layout.start();
 
                     // Take the output of layout and draw the words (fill depends on the word, font-size depends on the frequency 
-                    function draw(words) {
+                    function add_words(words) {
                         wordCloud_svg.append("g")
                             .attr("transform", "translate(" + (layout.size()[0] / 2) + "," + (layout.size()[1] / 2) + ")")
                             .selectAll("text")
                             .data(words)
                             .enter().append("text")
-                            .style("font-size", function (d) { return d.size; })
-                            .style("fill", function (d) { return tagScale(d.text) })
+                            .style("font-size", d => { return d.size; })
+                            .style("fill", d => { return tagScale(d.text) })
+                            .attr("transform", d => { return "translate(" + [d.x, d.y] + ")"; })
+                            .text(d => { return d.text; })
                             .attr("text-anchor", "middle")
-                            .style("font-family", "Impact")
-                            .attr("transform", function (d) {
-                                return "translate(" + [d.x, d.y] + ")";
-                            })
-                            .text(function (d) { return d.text; });
+                            .style("font-family", "Impact");
                     }
 
                 }, (error) => {
