@@ -88,17 +88,17 @@
             <h2 class="sub_title">What makes a video trending on <img class="logo" src="./YouTube_Logo.svg" />?</h2>
         </div>
         <div class="para">
-            Have you ever wondered what is common between the videos on the Youtube trending page? We are going to
+            Have you ever wondered what's common between the videos on the YouTube trending page? We are going to
             analyze
             exactly that and try to find some common ground between trending videos in the United States
-            region (200 at one time) using different visualizations.
+             using different visualizations.
         </div>
-        <div class="heading"> What categories make up the trending page? </div>
+        <div class="heading"> Which categories make up the trending page? </div>
         <p id="part1">
             <div id="bar_chart" class="svg_container"></div>
-            <div class="para"> The top 3 trending categories are Entertainment, Sports, and Music
-                which is reasonable, because all of these categories have a large user audience across all age
-                groups. It is interesting to see News & Politics in the 7th position, even below Howto & Style and the
+            <div class="para"> The top 3 trending categories are Entertainment, Sports, and Music.
+                This is reasonable, because all of these categories have a large user audience across all age
+                groups. It is also interesting to see News & Politics in the 7th position, below Howto & Style and the
                 People & Blogs category.
             </div>
         </p>
@@ -107,7 +107,7 @@
             <div id="kids_chart" class="svg_container"></div>
             <div class="para">Only 1 video out of all 200 trending videos was specifically targeted towards kids. A
                 staggering majority
-                of trending videos on YouTube were not found in the kids category. Interestingly, the video found in the
+                of trending videos on YouTube was not found in the kids category. Interestingly, the video found in the
                 kids category is
                 about a show called The Steven Universe, which has a sizeable teenager and adult following.
             </div>
@@ -124,18 +124,18 @@
                     </defs>
                 </svg>
             </div>
-            <div class="para">There are very few standard definition videos (7 out of 200) which makes sense, because
+            <div class="para">There are very few standard definition videos (7 out of 200). This makes sense, because
                 people prefer videos with a better quality. </div>
         </p>
-        <div class="heading"> What #tag do videos use? </div>
+        <div class="heading"> Which tags do videos use? </div>
         <p id="part4">
             <div id="word_cloud" class="svg_container"></div>
             <div class="para">The average number of tags used by a trending video is 18.81. The word cloud above
                 displays the 20 most frequently used tags. The top 2 tags are funny and comedy,
-                which speak to the general entertainment purpose of YouTube videos. Most of the tags describe the type
-                or subject of the video, and they line up with the common categories found earlier.
+                which speaks to the general entertainment purpose of YouTube videos. Most of the tags describe the type
+                or subject of the video, and they line up with the top categories found earlier.
                 Because our data came from a single day, there are also some unexpected tags like Deontay Wilder and
-                Tyson Fury. These tags came from videos of their boxing rematch so they are most likely specific to the
+                Tyson Fury. These tags came from videos about their boxing rematch, so they are most likely specific to the
                 time that our data was retrieved.
             </div>
         </p>
@@ -267,7 +267,7 @@
 
                     let kid_friendly = 0;
                     let not_kid_targeted = 0;
-
+                    // Get number of videos that are kid-friendly and not kid-friendly.
                     result.forEach(d => {
                         if (d.status.madeForKids) {
                             kid_friendly += 1;
@@ -278,6 +278,8 @@
                     })
 
                     // Referenced  https://www.d3-graph-gallery.com/pie to make pie charts.
+
+                    // Dictionary for both variables
                     var data = { "Made for Kids": kid_friendly, "Not for Kids": not_kid_targeted };
 
                     var kids_color = d3.scaleOrdinal()
@@ -300,6 +302,7 @@
                         .attr("fill", d => { return (kids_color(d.data.key)) })
                         .attr("stroke", "white");
 
+                    // Legend creation
                     svg2.append("circle")
                         .attr("cx", width2 / 2 - 340)
                         .attr("cy", height2 - 220)
@@ -332,6 +335,8 @@
                     // Part 3 - Standard vs High Definition
                     let num_hd = 0;
                     let num_sd = 0;
+
+                    // Obtained number of HD/SD videos
                     result.forEach(d => {
                         let vid_def = d.contentDetails.definition;
                         if (vid_def == "hd") {
@@ -379,6 +384,7 @@
                         .attr("fill", d => { return (quality_color(d.data.key)) })
                         .attr("stroke", "white");
 
+                    // Legend Creation
                     def_svg.append("circle")
                         .attr("cx", quality_pie_width / 2 - 320)
                         .attr("cy", height2 - 220)
