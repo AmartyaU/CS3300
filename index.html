@@ -179,7 +179,7 @@
 
                     // modified version of stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys
                     // convert object into array of objects
-                    let categories_array = Object.keys(categories).map((key) => {
+                    let categories_array = Object.keys(categories).map( key => {
                         return { "category": key, "videos_number": categories[key] };
                     }, []);
                     // sort array according to videos_number in ascending order
@@ -194,12 +194,9 @@
                         .range([90, width - 20])
                         .padding(0.1);
 
-                    // console.log(Math.min(...Object.values(categories)));
-                    // console.log(Math.max(...Object.values(categories)));
-                    // max is 46 and min is 1 so using 0 and 50 as domain
-
                     const yScale = d3.scaleLinear()
                         .domain([0, Math.max(...Object.values(categories)) + 4])
+                        // increasing max domain by 4 to not have bar chart at the edge
                         .range([height - 150, 20]);
 
                     const categoryScale = d3.scaleOrdinal()
@@ -234,8 +231,8 @@
                         .attr("transform", "translate(-20, 400)")
                         .call(bottomAxis)
                         .selectAll("text")
-                        .attr("y", 15)
                         .attr("x", -5)
+                        .attr("y", 15)
                         .attr("dy", ".35em")
                         .attr("font-size", "1.3em")
                         .attr("transform", "rotate(45)")
@@ -245,7 +242,6 @@
 
                     svg.append("text")
                         .attr("transform", "translate(500, 525)")
-                        // .attr("transform", "translate(450, 495)")
                         .style("text-anchor", "middle")
                         .style("font-weight", "bold")
                         .style("font-size", "1.2em")
@@ -512,9 +508,9 @@
                     })
 
                     // Referenced https://stackoverflow.com/questions/32302234/object-filter-by-n-highest-numeric-values-of-keys to get top 20 tags 
-                    var map_tags = Object.keys(tags).map(function (key) {
+                    var map_tags = Object.keys(tags).map( key => {
                         return { "tag": key, "frequency": tags[key] };
-                    }, tags);
+                    }, []);
                     map_tags.sort((tag1, tag2) => { return tag2.frequency - tag1.frequency; });
                     var topTags = map_tags.slice(0, 20);
 
